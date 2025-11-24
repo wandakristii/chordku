@@ -5,56 +5,113 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <title>Chord Master Cloud V14</title>
+    <title>Chord Master V13 (Cloud)</title>
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
 
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <style>
-        /* GAYA SAMA SEPERTI V13 (Disingkat agar muat, tapi fungsi tetap sama) */
-        :root { --bg:#fff; --text:#000; --accent:#2962ff; --font-stack:'Roboto Condensed',sans-serif; }
-        body { font-family:var(--font-stack); background:var(--bg); color:var(--text); margin:0; padding:10px; padding-bottom:150px; }
-        .hidden { display:none!important; }
-        .btn { border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer; width:100%; margin-bottom:5px; }
-        .btn-primary { background:var(--accent); color:#fff; }
-        .btn-secondary { background:#eee; color:#000; }
-        .btn-danger { background:#ffcdd2; color:#b71c1c; }
-        input, select { background:#fff; border:1px solid #ccc; padding:10px; width:100%; box-sizing:border-box; border-radius:5px; margin-bottom:5px; }
-        
-        /* CLOUD STATUS BAR */
-        .cloud-status {
-            background: #e8f5e9; color: #2e7d32; padding: 8px; text-align: center; font-size: 12px; border-radius: 5px; margin-bottom: 10px; border: 1px solid #c8e6c9;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .status-dot { height: 8px; width: 8px; background-color: #bbb; border-radius: 50%; display: inline-block; margin-right: 5px;}
-        .status-dot.online { background-color: #00c853; box-shadow: 0 0 5px #00c853; }
-
-        /* LOGIN OVERLAY */
-        #login-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); z-index: 9999;
-            display: flex; justify-content: center; align-items: center;
-        }
-        .login-box {
-            background: white; padding: 25px; border-radius: 12px; width: 80%; max-width: 300px; text-align: center;
+        /* --- STYLE ASLI V13 (TIDAK DIUBAH) --- */
+        :root {
+            --bg-color: #ffffff;
+            --card-bg: #f8f9fa; 
+            --text-main: #000000;
+            --text-sec: #555555;
+            --accent: #2962ff; 
+            --accent-sec: #00c853; 
+            --border: #ddd;
+            --col-verse: #000; --col-chorus: #d50000; --col-bridge: #ff6d00; --col-intro: #6200ea; 
+            --font-chord: 22px;
+            --font-stack: 'Roboto Condensed', 'Avenir Next Condensed', 'Arial Narrow', sans-serif;
         }
 
-        /* UI Components (Song Card, etc - Simplified for V14 Code Space) */
-        .song-card { background:#f8f9fa; padding:15px; border-radius:8px; margin-bottom:10px; border-left:5px solid var(--accent); box-shadow:0 2px 3px rgba(0,0,0,0.1); }
-        .gig-nav { position:fixed; bottom:70px; left:15px; right:15px; background:#fff; border:1px solid #ccc; border-radius:12px; padding:10px; display:flex; gap:10px; z-index:200; box-shadow:0 5px 20px rgba(0,0,0,0.2); }
-        .fab { position:fixed; bottom:90px; right:20px; width:55px; height:55px; border-radius:50%; background:var(--accent); color:#fff; font-size:28px; border:none; display:flex; justify-content:center; align-items:center; box-shadow:0 4px 10px rgba(0,0,0,0.3); z-index:100; }
+        body {
+            font-family: var(--font-stack); background-color: var(--bg-color); color: var(--text-main);
+            margin: 0; padding: 10px; padding-bottom: 180px; 
+        }
+
+        .hidden { display: none !important; }
+        .btn { border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-family: var(--font-stack); font-size: 16px; margin-bottom: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .btn-primary { background-color: var(--accent); color: #fff; }
+        .btn-secondary { background-color: #e0e0e0; color: #000; }
+        .btn-danger { background-color: #ffcdd2; color: #b71c1c; }
+        .btn-outline { border: 1px solid var(--accent); color: var(--accent); background: transparent; padding: 6px 12px; margin-right: 5px; }
+        .btn-action { background: #eee; color: #333; font-size: 14px; width: 100%; border: 1px solid #ccc; }
+        .btn-sm { padding: 5px 10px; font-size: 14px; }
+        .btn-download { background: #e3f2fd; color: #1565c0; border: 1px solid #bbdefb; } /* Added style for download btn */
         
-        /* Editor Grid */
-        .bar-wrapper { border-bottom:1px solid #eee; padding:10px 0; }
-        .grid-row { display:grid; gap:4px; }
-        .beat-input { text-align:center; font-weight:bold; font-size:1.2em; padding:8px 0; border:1px solid #ccc; border-radius:4px; }
-        .melody-input { text-align:center; border:none; border-bottom:1px dashed #ccc; font-size:0.9em; color:#00c853; }
+        .tool-btn { background: #fff; color: #888; border: 1px solid #ccc; padding: 6px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; min-width: 35px; }
+        .tool-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+        input, select, textarea { background: #fff; border: 1px solid #aaa; color: #000; padding: 12px; border-radius: 8px; font-family: var(--font-stack); font-size: 18px; box-sizing: border-box; width: 100%; }
         
-        /* View Mode */
-        .view-bar { display:grid; border-right:1px solid #ccc; padding:4px 0; } .view-bar:nth-child(4n){border-right:none;}
-        .view-chord { font-weight:800; font-size:22px; text-align:center; }
+        .search-container { margin-bottom: 15px; position: relative; }
+        .search-input { padding-left: 40px; background-color: #f0f0f0; border: none; }
+        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 1.2em; color: #888; pointer-events: none; }
+
+        .nav-tabs { display: flex; gap: 10px; margin-bottom: 15px; }
+        .tab-btn { flex: 1; padding: 10px; border: none; background: #eee; border-radius: 8px; font-weight: bold; color: #666; }
+        .tab-btn.active { background: var(--accent); color: white; }
+
+        .song-card { background-color: var(--card-bg); padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #ddd; border-left: 5px solid var(--accent); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        
+        .setlist-card { background: #fff8e1; border: 1px solid #ffe082; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        
+        .ordered-list-container { background: #e3f2fd; border: 1px solid #bbdefb; padding: 10px; border-radius: 8px; margin-bottom: 20px; max-height: 300px; overflow-y: auto; }
+        .ordered-item { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 8px; margin-bottom: 5px; border-radius: 4px; border: 1px solid #ddd; }
+        .order-controls { display: flex; gap: 5px; }
+
+        .song-checkbox-item { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #eee; }
+        .song-checkbox-item input { width: 25px; height: 25px; margin-right: 15px; }
+
+        .section-block { background: #fff; border: 1px solid #ccc; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .section-header { background: #f0f0f0; padding: 10px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; gap: 10px; border-bottom: 1px solid #ddd; }
+        .section-note-input { background: transparent; border: none; border-bottom: 1px dashed #999; color: var(--accent); font-size: 0.9em; text-align: right; padding: 5px; width: 50%; }
+        .bar-wrapper { padding: 10px; border-bottom: 1px solid #eee; position: relative; }
+        .bar-tools { display: flex; justify-content: space-between; margin-top: 8px; background: #f9f9f9; padding: 5px; border-radius: 6px; }
+        
+        .grid-row { display: grid; gap: 4px; }
+        .beat-container { display: flex; flex-direction: column; gap: 2px; }
+        .melody-input { width: 100%; text-align: center; background: transparent; border: none; border-bottom: 1px dashed #ccc; color: var(--accent-sec); font-size: 0.9em; font-weight: bold; }
+        .beat-input { width: 100%; text-align: center; font-weight: bold; font-size: 1.2em; padding: 8px 0; background: #fff; border: 1px solid #ccc; color: #000; border-radius: 4px; }
+
+        .view-section-wrapper { margin-bottom: 15px; }
+        .view-section-title { color: #333; font-size: 0.9em; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; border-bottom: 2px solid #000; padding-bottom: 2px; display: flex; justify-content: space-between; align-items: baseline; }
+        .sec-Chorus .view-section-title { color: var(--col-chorus); border-color: var(--col-chorus); }
+        .sec-Bridge .view-section-title { color: var(--col-bridge); border-color: var(--col-bridge); }
+        .sec-Intro .view-section-title { color: var(--col-intro); border-color: var(--col-intro); }
+        
+        .view-section-note { color: var(--accent-sec); font-size: 0.9em; text-transform: none; letter-spacing: 0; font-style: italic; font-weight: bold;}
+        
+        .view-bars-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; width: 100%; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; }
+        .view-bar { display: grid; position: relative; border-right: 1px solid #ccc; padding: 4px 0; overflow: hidden; box-sizing: border-box; }
+        .view-bar:nth-child(4n) { border-right: none; }
+        .view-bar.rep-start { border-left: 5px solid #000 !important; padding-left: 2px; }
+        .view-bar.rep-end { border-right: 5px solid #000 !important; }
+        .view-bar:nth-child(4n).rep-end { border-right: 5px solid #000 !important; }
+
+        .view-beat-box { background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 45px; }
+        .view-melody { color: var(--accent-sec); font-size: 0.8em; margin-bottom: 0px; min-height: 12px; line-height: 1; white-space: nowrap; letter-spacing: -0.5px; font-weight: bold; }
+        .view-chord { color: #000; font-weight: 800; font-size: var(--font-chord); line-height: 1; white-space: nowrap; letter-spacing: -1px; }
+        .empty-dot { color: #ccc; font-weight: normal; font-size: 0.8em; letter-spacing: 0; }
+        
+        .zoom-panel { display: flex; align-items: center; gap: 10px; background: #fff; padding: 8px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ccc; }
+        
+        .gig-nav { position: fixed; bottom: 0; left: 15px; right: 15px; background: #fff; border: 1px solid #ccc; border-radius: 12px; padding: 10px; display: flex; gap: 10px; z-index: 200; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
+        .gig-btn { flex: 1; padding: 15px; font-size: 18px; border-radius: 8px; }
+
+        .fab { position: fixed; bottom: 90px; right: 20px; width: 55px; height: 55px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 28px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; z-index: 100; }
+        .add-menu { overflow-x: auto; white-space: nowrap; padding-bottom: 5px;}
+
+        /* --- NEW: CLOUD LOGIN STYLES --- */
+        #login-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; display:flex; justify-content:center; align-items:center; }
+        .login-box { background:white; padding:25px; border-radius:12px; width:85%; max-width:320px; text-align:center; }
+        .cloud-status { background:#e8f5e9; color:#2e7d32; padding:8px; font-size:12px; border-radius:5px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; border:1px solid #c8e6c9; }
+        .status-dot { height:8px; width:8px; background-color:#00c853; border-radius:50%; display:inline-block; margin-right:5px; box-shadow:0 0 5px #00c853; }
     </style>
 </head>
 <body>
@@ -62,70 +119,130 @@
     <div id="login-overlay">
         <div class="login-box">
             <h2>☁️ Connect Cloud</h2>
-            <p style="color:#666; font-size:0.9em;">Masukkan Kode Rahasia yang sama di semua HP/Laptop agar data tersinkron.</p>
-            <input type="text" id="secret-code" placeholder="Contoh: band-joko-123">
+            <p style="color:#666; font-size:0.9em;">Masukkan Kode Rahasia Database:</p>
+            <input type="text" id="secret-code" placeholder="Contoh: joko-band-123">
             <button class="btn btn-primary" onclick="connectToCloud()">Sambungkan</button>
-            <p style="font-size:0.8em; margin-top:10px; color:#888;">Pastikan ada koneksi internet.</p>
         </div>
     </div>
 
-    <div class="cloud-status" id="cloud-bar" style="display:none;">
-        <span><span class="status-dot online"></span> Terhubung: <b id="display-code">...</b></span>
-        <button onclick="logoutCloud()" style="background:none; border:none; color:#d32f2f; font-size:10px; text-decoration:underline; cursor:pointer;">Putus</button>
+    <div id="cloud-bar" class="cloud-status" style="display:none; margin: 10px;">
+        <span><span class="status-dot"></span> Terhubung: <b id="display-code">...</b></span>
+        <span onclick="logoutCloud()" style="text-decoration:underline;cursor:pointer;color:#d32f2f;">Putus</span>
     </div>
 
     <div id="list-view">
-        <div style="display:flex; gap:10px; margin-bottom:15px;">
-            <button class="btn btn-secondary" onclick="switchTab('songs')">Library</button>
-            <button class="btn btn-secondary" onclick="switchTab('sets')">Setlists</button>
+        <h2 style="margin: 10px 0 15px 0;">Chord Master Cloud</h2>
+        
+        <div class="nav-tabs">
+            <button class="tab-btn active" id="tab-songs" onclick="switchTab('songs')">Library</button>
+            <button class="tab-btn" id="tab-sets" onclick="switchTab('sets')">Setlists</button>
         </div>
+
         <div id="content-songs">
-            <input type="search" id="search-input" placeholder="Cari Lagu..." oninput="searchSongs()">
+            <div class="search-container">
+                <span class="search-icon">🔍</span>
+                <input type="search" id="search-input" class="search-input" placeholder="Cari Judul..." oninput="searchSongs()">
+            </div>
             <div id="songs-list"></div>
         </div>
+
         <div id="content-sets" class="hidden">
-            <button class="btn btn-primary" onclick="createNewSetlist()">+ Buat Setlist</button>
+            <button class="btn btn-primary" onclick="createNewSetlist()" style="width:100%; margin-bottom:15px;">+ Buat Setlist Baru</button>
             <div id="sets-list"></div>
         </div>
-        <button class="fab" onclick="openEditor()">+</button>
+
+        <button id="fab-add" class="fab" onclick="openEditor()">+</button>
+
+        <div class="data-panel" style="margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px;">
+            <h3 style="margin-top:0; font-size:14px; color:#aaa;">📥 Backup & Restore</h3>
+            
+            <button class="btn btn-download" onclick="downloadBackup()" style="width:100%; margin-bottom:10px;">💾 Download Backup (.json)</button>
+            
+            <textarea id="data-export" class="data-area" readonly onclick="this.select()" style="height: 50px; font-size: 10px;"></textarea>
+            <button class="btn btn-action" onclick="copyData()">Copy Text</button>
+            
+            <hr style="border-color:#ccc; margin: 15px 0;">
+            
+            <textarea id="data-import" class="data-area" placeholder="Paste data..." style="height: 50px; font-size: 10px;"></textarea>
+            <button class="btn btn-primary" onclick="importData()">Restore to Cloud</button>
+        </div>
+    </div>
+
+    <div id="setlist-editor" class="hidden">
+        <div style="background:#fff; padding:15px; position:sticky; top:0; border-bottom:1px solid #ccc; z-index: 20;">
+            <h3 style="margin:0 0 10px 0;">Edit Setlist</h3>
+            <input type="text" id="set-name" placeholder="Nama Event (misal: Wedding Sabtu)">
+            <div style="margin-top:10px; display:flex; gap:10px;">
+                <button class="btn btn-secondary" onclick="closeSetlistEditor()" style="flex:1">Batal</button>
+                <button class="btn btn-primary" onclick="saveSetlist()" style="flex:1">Simpan</button>
+            </div>
+        </div>
+        <div style="padding:15px; background:#fff;">
+            <h4>1. Urutan Main (Geser ↑ ↓)</h4>
+            <div id="setlist-ordered-list" class="ordered-list-container">
+                <p style="text-align:center; color:#666; font-size:0.9em;">Belum ada lagu dipilih.</p>
+            </div>
+            <h4 style="margin-top:20px;">2. Pilih Lagu (A-Z)</h4>
+            <div id="setlist-song-select"></div>
+        </div>
+        <button class="btn btn-danger" onclick="deleteSetlist()" style="margin:20px; width:90%;">Hapus Setlist Ini</button>
     </div>
 
     <div id="editor-view" class="hidden">
-        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-            <button class="btn btn-secondary" style="width:auto" onclick="goHome()">Batal</button>
-            <button class="btn btn-primary" style="width:auto" onclick="saveSong()">Simpan ke Cloud</button>
+        <div style="display:flex; justify-content:space-between; margin-bottom:15px; position:sticky; top:0; background:var(--bg-color); padding:10px 0; z-index:10; border-bottom:1px solid #eee;">
+            <button class="btn btn-secondary" onclick="goHome()">Batal</button>
+            <button class="btn btn-primary" onclick="saveSong()">Simpan</button>
         </div>
         <input type="hidden" id="song-id">
-        <input type="text" id="title" placeholder="Judul Lagu">
-        <input type="text" id="artist" placeholder="Artis">
-        <div style="display:flex; gap:5px;">
-            <input type="text" id="key" placeholder="Key" style="flex:2">
-            <select id="tempo" style="flex:1"><option value="4">4/4</option><option value="3">3/4</option><option value="2">2/4</option><option value="6">6/8</option></select>
+        <div style="margin-bottom:10px;"><input type="text" id="title" placeholder="Judul Lagu"></div>
+        <div style="margin-bottom:10px;"><input type="text" id="artist" placeholder="Artis"></div>
+        <div style="display:flex; gap:5px; margin-bottom:20px;">
+            <input type="text" id="key" placeholder="Key (ex: G -> A)" style="flex:2;">
+            <input type="number" id="bpm" placeholder="BPM" style="flex:1;">
+            <select id="tempo" style="flex:1;"><option value="4">4/4</option><option value="3">3/4</option><option value="2">2/4</option><option value="6">6/8</option></select>
         </div>
         <div id="editor-sections"></div>
-        <div style="margin-top:20px;">
-            <button class="btn btn-secondary" onclick="addSection('Verse')">+ Verse</button>
-            <button class="btn btn-secondary" onclick="addSection('Chorus')">+ Chorus</button>
+        <div style="margin-top:20px; background:#f5f5f5; padding:10px; border-radius:8px;">
+            <div class="add-menu">
+                <button class="btn btn-outline" onclick="addSection('Intro')">Intro</button>
+                <button class="btn btn-outline" onclick="addSection('Verse')">Verse</button>
+                <button class="btn btn-outline" onclick="addSection('Chorus')">Chorus</button>
+                <button class="btn btn-outline" onclick="addSection('Bridge')">Bridge</button>
+                <button class="btn btn-outline" onclick="addSection('Interlude')">Interlude</button>
+                <button class="btn btn-outline" onclick="addSection('Ending')">Ending</button>
             </div>
-        <button class="btn btn-danger" onclick="deleteSong()" style="margin-top:20px;">Hapus Lagu</button>
+        </div>
+        <button class="btn btn-danger" onclick="deleteSong()" style="margin-top:30px; width:100%">Hapus Lagu</button>
     </div>
 
     <div id="detail-view" class="hidden">
-        <div style="text-align:center; margin-bottom:20px;">
-            <button class="btn btn-secondary" onclick="goHome()" style="float:left; width:auto; padding:5px 10px;">&larr;</button>
-            <button class="btn btn-secondary" onclick="editCurrent()" style="float:right; width:auto; padding:5px 10px;">Edit</button>
-            <h2 id="view-title" style="margin:0;">Judul</h2>
-            <div id="view-meta" style="color:#666;">Artist • Key</div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+            <button class="btn btn-secondary btn-sm" onclick="exitDetail()">&larr; Back</button>
+            <button class="btn btn-secondary btn-sm" onclick="editCurrent()">Edit</button>
+        </div>
+        <div style="text-align:center; margin-bottom:10px;">
+            <h3 id="view-title" style="margin:0; font-size:1.8em; letter-spacing: -0.5px;">Judul</h3>
+            <div style="font-size:1em; color:#555; margin-top:5px; font-weight:bold;">
+                Key: <span id="view-key" style="color:var(--accent);"></span> • 
+                BPM: <span id="view-bpm"></span> • 
+                <span id="view-tempo"></span>
+            </div>
+            <div id="view-artist" style="color:#888; font-size:0.9em;">Artist</div>
+        </div>
+        <div class="zoom-panel">
+            <span style="font-size:14px;">Zoom:</span>
+            <input type="range" min="16" max="42" value="22" style="flex:1" oninput="updateZoom(this.value)">
         </div>
         <div id="view-content"></div>
-        <div class="gig-nav">
-            <button class="btn btn-secondary" style="flex:1" onclick="prevSetSong()">Prev</button>
-            <button class="btn btn-primary" style="flex:2" onclick="nextSetSong()">NEXT &rarr;</button>
+        
+        <div id="gig-nav" class="gig-nav hidden">
+            <button class="btn btn-secondary gig-btn" onclick="prevSetSong()">&#171; Prev</button>
+            <button class="btn btn-primary gig-btn" style="flex:2" onclick="nextSetSong()">NEXT SONG &rarr;</button>
         </div>
     </div>
 
     <script>
-        // --- ⚠️ CONFIG FIREBASE (GANTI INI DENGAN KODE ANDA!) ---
+        // --- ⚠️ CONFIG FIREBASE (GANTI DI SINI) ---
         const firebaseConfig = {
   apiKey: "AIzaSyBZOdVSpMfcOnf2x4KnAcnLe9jd-l4xJSg",
   authDomain: "chordku-78d09.firebaseapp.com",
@@ -135,26 +252,21 @@
   messagingSenderId: "288634910494",
   appId: "1:288634910494:web:b3ea33d647d1abaf5ebb0f"
         };
-        // ---------------------------------------------------------
+        // -----------------------------------------
 
-        // Initialize Firebase
+        // INIT FIREBASE
         let db;
-        let dbRef;
-        try {
-            firebase.initializeApp(firebaseConfig);
-            db = firebase.database();
-        } catch(e) {
-            console.error("Firebase Error (Belum setup config):", e);
-        }
+        try { firebase.initializeApp(firebaseConfig); db = firebase.database(); } 
+        catch(e) { console.error("Firebase Error", e); }
 
         // APP STATE
         let secretCode = localStorage.getItem('my_secret_code');
-        let songs = [];
-        let setlists = [];
-        let currentSong = null;
+        let songs = [], setlists = [];
+        let currentSong = null, currentSetlist = null, currentSetIndex = -1;
         let editState = { sections: [] };
+        let tempSetlistIds = [], editingSetlistId = null;
 
-        // 1. CONNECT LOGIC
+        // --- 1. LOGIN & CONNECT ---
         function checkLogin() {
             if(secretCode) {
                 document.getElementById('login-overlay').classList.add('hidden');
@@ -163,160 +275,193 @@
                 startSync();
             }
         }
-
         function connectToCloud() {
-            const input = document.getElementById('secret-code').value;
-            if(!input) return alert("Isi kode rahasia dulu!");
-            secretCode = input.trim();
-            localStorage.setItem('my_secret_code', secretCode);
-            checkLogin();
+            const val = document.getElementById('secret-code').value.trim();
+            if(!val) return alert("Isi kode!");
+            secretCode = val; localStorage.setItem('my_secret_code', val); checkLogin();
         }
+        function logoutCloud() { localStorage.removeItem('my_secret_code'); location.reload(); }
 
-        function logoutCloud() {
-            localStorage.removeItem('my_secret_code');
-            location.reload();
-        }
-
-        // 2. REALTIME SYNC (JANTUNG APLIKASI)
+        // --- 2. SYNC & SAVE (Core Logic) ---
         function startSync() {
             if(!db) return;
-            // Listen to changes in this secret folder
-            const userRef = db.ref('users/' + secretCode);
-            
-            userRef.on('value', (snapshot) => {
+            db.ref('users/' + secretCode).on('value', (snapshot) => {
                 const data = snapshot.val();
-                if(data) {
-                    songs = data.songs || [];
-                    setlists = data.setlists || [];
-                } else {
-                    // Data baru/kosong di cloud
-                    songs = [];
-                    setlists = [];
-                }
-                renderList(); // Auto refresh tampilan
+                if(data) { songs = data.songs || []; setlists = data.setlists || []; }
+                else { songs = []; setlists = []; }
+                
+                // Refresh UI depending on where we are
+                if(!document.getElementById('content-sets').classList.contains('hidden')) renderSetlists();
+                else searchSongs(); 
+                renderDataPanel();
             });
         }
-
-        // 3. SAVE TO CLOUD
         function saveToCloud() {
             if(!db || !secretCode) return;
-            db.ref('users/' + secretCode).set({
-                songs: songs,
-                setlists: setlists,
-                lastUpdated: new Date().toISOString()
-            }).then(() => {
-                console.log("Tersimpan di Cloud!");
-            }).catch((err) => {
-                alert("Gagal simpan ke internet: " + err.message);
-            });
+            db.ref('users/' + secretCode).set({ songs, setlists, updated: new Date().toISOString() });
         }
 
-        // --- STANDARD APP FUNCTIONS (MODIFIED TO CALL saveToCloud) ---
-        
-        function saveSong() {
-            const id = document.getElementById('song-id').value;
-            const title = document.getElementById('title').value;
-            if(!title) { alert("Judul?"); return; }
-            
-            const data = {
-                id: id ? parseInt(id) : Date.now(),
-                title, 
-                artist: document.getElementById('artist').value,
-                key: document.getElementById('key').value,
-                tempoVal: parseInt(document.getElementById('tempo').value),
-                sections: editState.sections
-            };
-
-            if(id) {
-                const idx = songs.findIndex(s => s.id == id);
-                if(idx >= 0) songs[idx] = data;
+        // --- 3. STANDARD FUNCTIONS (From V13 + SaveToCloud) ---
+        function switchTab(tab) {
+            document.getElementById('content-songs').classList.add('hidden');
+            document.getElementById('content-sets').classList.add('hidden');
+            document.getElementById('tab-songs').classList.remove('active');
+            document.getElementById('tab-sets').classList.remove('active');
+            document.getElementById('fab-add').classList.add('hidden');
+            if(tab === 'songs') {
+                document.getElementById('content-songs').classList.remove('hidden'); document.getElementById('tab-songs').classList.add('active'); document.getElementById('fab-add').classList.remove('hidden');
+                renderList(); document.getElementById('search-input').value = '';
             } else {
-                songs.push(data);
+                document.getElementById('content-sets').classList.remove('hidden'); document.getElementById('tab-sets').classList.add('active'); renderSetlists();
             }
-            
-            saveToCloud(); // PUSH KE INTERNET
-            goHome();
-        }
-
-        function deleteSong() {
-            if(confirm("Yakin hapus?")) {
-                songs = songs.filter(s => s.id != document.getElementById('song-id').value);
-                saveToCloud();
-                goHome();
-            }
-        }
-
-        // --- UI RENDERING (Sama seperti V13 tapi disingkat) ---
-        function renderList() {
-            const list = document.getElementById('songs-list'); list.innerHTML = '';
-            songs.sort((a,b) => a.title.localeCompare(b.title));
-            songs.forEach(s => {
-                list.innerHTML += `<div class="song-card" onclick="showDetail(${s.id})"><b>${s.title}</b><br><small>${s.artist}</small></div>`;
-            });
-        }
-        
-        function openEditor(songId=null) {
-            document.getElementById('list-view').classList.add('hidden');
-            document.getElementById('editor-view').classList.remove('hidden');
-            // ... (Logic populate form sama seperti V13) ...
-            // Untuk ringkas, logic populate form disederhanakan di sini:
-            if(songId) {
-                currentSong = songs.find(s => s.id === songId);
-                document.getElementById('song-id').value = currentSong.id;
-                document.getElementById('title').value = currentSong.title;
-                editState.sections = JSON.parse(JSON.stringify(currentSong.sections));
-            } else {
-                document.getElementById('song-id').value = '';
-                document.getElementById('title').value = '';
-                editState.sections = [];
-            }
-            renderEditor();
-        }
-
-        function addSection(type) { editState.sections.push({type, bars:[{beats:["","","",""], melody:["","","",""]}]}); renderEditor(); }
-        
-        function renderEditor() {
-            const c = document.getElementById('editor-sections'); c.innerHTML = '';
-            editState.sections.forEach((sec, idx) => {
-                let html = `<div style="margin-bottom:10px; border:1px solid #ccc; padding:10px;"><b>${sec.type}</b>`;
-                // Render bars logic simplified
-                sec.bars.forEach((bar, bIdx) => {
-                    html += `<div class="grid-row" style="grid-template-columns:repeat(4,1fr); margin-top:5px;">`;
-                    bar.beats.forEach((beat, k) => {
-                        html += `<input class="beat-input" value="${beat}" oninput="updateData(${idx},${bIdx},${k},this.value)">`;
-                    });
-                    html += `</div>`;
-                });
-                html += `</div>`;
-                c.innerHTML += html;
-            });
-        }
-        
-        function updateData(sIdx, bIdx, k, val) { editState.sections[sIdx].bars[bIdx].beats[k] = val; }
-
-        function showDetail(id) {
-            currentSong = songs.find(s=>s.id===id);
-            document.getElementById('list-view').classList.add('hidden');
-            document.getElementById('detail-view').classList.remove('hidden');
-            document.getElementById('view-title').innerText = currentSong.title;
-            // Render Detail Logic...
         }
 
         function goHome() {
-            document.getElementById('list-view').classList.remove('hidden');
-            document.getElementById('editor-view').classList.add('hidden');
-            document.getElementById('detail-view').classList.add('hidden');
+            document.getElementById('list-view').classList.remove('hidden'); document.getElementById('editor-view').classList.add('hidden'); document.getElementById('detail-view').classList.add('hidden'); document.getElementById('setlist-editor').classList.add('hidden'); document.getElementById('gig-nav').classList.add('hidden');
+            if(!document.getElementById('content-sets').classList.contains('hidden')) renderSetlists(); else { renderList(); document.getElementById('search-input').value = ''; }
+            renderDataPanel();
+        }
+        function exitDetail() { currentSetIndex = -1; goHome(); }
+        
+        function searchSongs() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filtered = songs.filter(s => s.title.toLowerCase().includes(query) || (s.artist && s.artist.toLowerCase().includes(query)));
+            renderList(filtered);
+        }
+        function renderList(dataToRender = null) {
+            const list = document.getElementById('songs-list'); list.innerHTML = '';
+            let data = dataToRender || songs;
+            data.sort((a,b) => a.title.localeCompare(b.title));
+            if(data.length === 0) { list.innerHTML = '<p style="text-align:center;color:#888;margin-top:20px;">Tidak ada lagu.</p>'; return; }
+            data.forEach(s => {
+                const div = document.createElement('div'); div.className = 'song-card'; div.onclick = () => showDetail(s.id);
+                div.innerHTML = `<div style="font-size:0.8em;color:#555;font-weight:bold;">${s.artist||'Tanpa Artis'}</div><b style="font-size:1.1em;">${s.title}</b><div style="color:#666;font-size:0.8em;margin-top:4px;">Key: ${s.key} • BPM: ${s.bpm||'-'}</div>`;
+                list.appendChild(div);
+            });
+        }
+
+        // SETLIST
+        function renderSetlists() {
+            const container = document.getElementById('sets-list'); container.innerHTML = '';
+            if(setlists.length === 0) container.innerHTML = '<p style="text-align:center;color:#888;">Belum ada setlist.</p>';
+            setlists.forEach(set => { container.innerHTML += `<div class="setlist-card"><div onclick="playSetlist(${set.id})" style="flex:1; cursor:pointer;"><div style="font-weight:bold; font-size:1.1em;">${set.name}</div><div style="font-size:0.9em; color:#666;">${set.songIds.length} Lagu</div></div><button class="btn btn-secondary btn-sm" onclick="editSetlist(${set.id})">Edit</button></div>`; });
+        }
+        function createNewSetlist() { editingSetlistId = null; document.getElementById('set-name').value = ''; tempSetlistIds = []; openSetlistEditorUI(); }
+        function editSetlist(id) { const set = setlists.find(s => s.id === id); editingSetlistId = id; document.getElementById('set-name').value = set.name; tempSetlistIds = [...set.songIds]; openSetlistEditorUI(); }
+        function openSetlistEditorUI() { renderSetlistUI(); document.getElementById('list-view').classList.add('hidden'); document.getElementById('setlist-editor').classList.remove('hidden'); }
+        function renderSetlistUI() {
+            const orderedContainer = document.getElementById('setlist-ordered-list'); orderedContainer.innerHTML = '';
+            if (tempSetlistIds.length === 0) { orderedContainer.innerHTML = '<p style="text-align:center; color:#666; font-size:0.9em;">Belum ada lagu dipilih.</p>'; } 
+            else { tempSetlistIds.forEach((id, index) => { const song = songs.find(s => s.id === id); if(!song) return; orderedContainer.innerHTML += `<div class="ordered-item"><div><b>${index+1}.</b> ${song.title}</div><div class="order-controls"><button class="tool-btn" onclick="moveSetSong(${index}, -1)">↑</button><button class="tool-btn" onclick="moveSetSong(${index}, 1)">↓</button><button class="tool-btn" style="color:red;" onclick="toggleSetSong(${id})">X</button></div></div>`; }); }
+            const checkContainer = document.getElementById('setlist-song-select'); checkContainer.innerHTML = '';
+            [...songs].sort((a,b)=>a.title.localeCompare(b.title)).forEach(s => { const checked = tempSetlistIds.includes(s.id) ? 'checked' : ''; checkContainer.innerHTML += `<div class="song-checkbox-item" onclick="toggleSetSong(${s.id})"><input type="checkbox" ${checked} disabled> <div style="pointer-events:none;"><div style="font-weight:bold;">${s.title}</div><div style="font-size:0.8em; color:#666;">${s.key} • ${s.artist}</div></div></div>`; });
+        }
+        function toggleSetSong(id) { const idx = tempSetlistIds.indexOf(id); if (idx >= 0) tempSetlistIds.splice(idx, 1); else tempSetlistIds.push(id); renderSetlistUI(); }
+        function moveSetSong(index, direction) { if ((direction === -1 && index > 0) || (direction === 1 && index < tempSetlistIds.length - 1)) { [tempSetlistIds[index], tempSetlistIds[index + direction]] = [tempSetlistIds[index + direction], tempSetlistIds[index]]; renderSetlistUI(); } }
+        
+        // SAVE SETLIST (With Cloud)
+        function saveSetlist() { const name = document.getElementById('set-name').value; if(!name) { alert("Nama?"); return; } if(editingSetlistId) { setlists[setlists.findIndex(s=>s.id===editingSetlistId)] = { id: editingSetlistId, name, songIds: tempSetlistIds }; } else { setlists.push({ id: Date.now(), name, songIds: tempSetlistIds }); } saveToCloud(); closeSetlistEditor(); }
+        function deleteSetlist() { if(confirm("Hapus?")) { setlists = setlists.filter(s=>s.id!==editingSetlistId); saveToCloud(); closeSetlistEditor(); } }
+        function closeSetlistEditor() { document.getElementById('setlist-editor').classList.add('hidden'); document.getElementById('list-view').classList.remove('hidden'); renderSetlists(); }
+        function playSetlist(id) { currentSetlist = setlists.find(s => s.id === id); if(currentSetlist.songIds.length===0){alert("Kosong!");return;} currentSetIndex=0; loadGigSong(); }
+        function loadGigSong() { showDetail(currentSetlist.songIds[currentSetIndex], true); }
+        function nextSetSong() { if(currentSetIndex<currentSetlist.songIds.length-1) { currentSetIndex++; loadGigSong(); } else alert("Selesai!"); }
+        function prevSetSong() { if(currentSetIndex>0) { currentSetIndex--; loadGigSong(); } }
+
+        // EDITOR
+        function openEditor(songId = null) {
+            document.getElementById('list-view').classList.add('hidden'); document.getElementById('detail-view').classList.add('hidden'); document.getElementById('editor-view').classList.remove('hidden'); window.scrollTo(0,0);
+            if (songId) { currentSong = songs.find(s => s.id === songId); document.getElementById('song-id').value = currentSong.id; document.getElementById('title').value = currentSong.title; document.getElementById('artist').value = currentSong.artist||""; document.getElementById('key').value = currentSong.key; document.getElementById('bpm').value = currentSong.bpm||""; document.getElementById('tempo').value = currentSong.tempoVal; editState.sections = JSON.parse(JSON.stringify(currentSong.sections)); } 
+            else { document.getElementById('song-id').value = ''; document.getElementById('title').value = ''; document.getElementById('artist').value = ''; document.getElementById('key').value = ''; document.getElementById('bpm').value = ''; document.getElementById('tempo').value = '4'; editState.sections = []; }
+            renderEditor();
+        }
+        function addSection(type) { editState.sections.push({ type, note: "", bars: [] }); addBar(editState.sections.length-1); }
+        function removeSection(idx) { if(confirm("Hapus?")) { editState.sections.splice(idx,1); renderEditor(); } }
+        function updateSectionNote(i,v) { editState.sections[i].note = v; }
+        function addBar(i) { const t=parseInt(document.getElementById('tempo').value); editState.sections[i].bars.push({melody:Array(t).fill(""), beats:Array(t).fill(""), repStart:false, repEnd:false}); renderEditor(); }
+        function removeBar(s,b) { editState.sections[s].bars.splice(b,1); renderEditor(); }
+        function updateData(s,b,t,i,v) { editState.sections[s].bars[b][t][i] = v; }
+        function moveBar(s,b,d) { const bars=editState.sections[s].bars; if((d===-1&&b>0)||(d===1&&b<bars.length-1)) { [bars[b],bars[b+d]]=[bars[b+d],bars[b]]; renderEditor(); } }
+        function toggleRepeat(s,b,t) { if(t==='start') editState.sections[s].bars[b].repStart=!editState.sections[s].bars[b].repStart; if(t==='end') editState.sections[s].bars[b].repEnd=!editState.sections[s].bars[b].repEnd; renderEditor(); }
+        function renderEditor() {
+            const c = document.getElementById('editor-sections'); const t = parseInt(document.getElementById('tempo').value); c.innerHTML = '';
+            editState.sections.forEach((sec, sIdx) => {
+                let h = `<div class="section-block"><div class="section-header"><span>${sec.type}</span><input type="text" class="section-note-input" placeholder="Note..." value="${sec.note||''}" oninput="updateSectionNote(${sIdx}, this.value)"><span onclick="removeSection(${sIdx})" style="color:#b71c1c;cursor:pointer;font-size:1.2em;">✖</span></div>`;
+                sec.bars.forEach((bar, bIdx) => {
+                    let beats=[...(bar.beats||[])], mels=[...(bar.melody||[])]; while(beats.length<t)beats.push(""); while(mels.length<t)mels.push(""); beats=beats.slice(0,t); mels=mels.slice(0,t);
+                    const as=bar.repStart?'active':'', ae=bar.repEnd?'active':'';
+                    h += `<div class="bar-wrapper"><div class="grid-row" style="grid-template-columns:repeat(${t},1fr)">`;
+                    for(let i=0;i<t;i++) h+=`<div class="beat-container"><input class="melody-input" value="${mels[i]}" oninput="updateData(${sIdx},${bIdx},'melody',${i},this.value)" placeholder="."><input class="beat-input" value="${beats[i]}" oninput="updateData(${sIdx},${bIdx},'beats',${i},this.value)"></div>`;
+                    h += `</div><div class="bar-tools"><div style="display:flex;gap:5px;"><button class="tool-btn ${as}" onclick="toggleRepeat(${sIdx},${bIdx},'start')">||:</button><button class="tool-btn ${ae}" onclick="toggleRepeat(${sIdx},${bIdx},'end')">:||</button></div><div style="display:flex;gap:5px;"><button class="tool-btn" onclick="moveBar(${sIdx},${bIdx},-1)">↑</button><button class="tool-btn" onclick="moveBar(${sIdx},${bIdx},1)">↓</button><button class="tool-btn" style="color:#b71c1c;" onclick="removeBar(${sIdx},${bIdx})">✖</button></div></div></div>`;
+                });
+                h+=`<button class="btn btn-secondary btn-sm" style="width:100%" onclick="addBar(${sIdx})">+ Bar</button></div>`; c.innerHTML+=h;
+            });
         }
         
+        // SAVE SONG (With Cloud)
+        function saveSong() {
+            const id=document.getElementById('song-id').value; const title=document.getElementById('title').value; if(!title){alert("Judul?");return;}
+            const data={ id:id?parseInt(id):Date.now(), title, artist:document.getElementById('artist').value, key:document.getElementById('key').value, bpm:document.getElementById('bpm').value, tempoVal:parseInt(document.getElementById('tempo').value), sections:editState.sections };
+            if(id) songs[songs.findIndex(s=>s.id==id)]=data; else songs.push(data); saveToCloud(); goHome();
+        }
+        function deleteSong() { if(confirm("Hapus?")) { songs=songs.filter(s=>s.id!=document.getElementById('song-id').value); saveToCloud(); goHome(); } }
+
+        // VIEW (Zoom V13 logic maintained)
+        function showDetail(id, isGigMode=false) {
+            currentSong = songs.find(s=>s.id===id);
+            document.getElementById('list-view').classList.add('hidden'); document.getElementById('setlist-editor').classList.add('hidden'); document.getElementById('detail-view').classList.remove('hidden'); window.scrollTo(0,0);
+            if(isGigMode) document.getElementById('gig-nav').classList.remove('hidden'); else document.getElementById('gig-nav').classList.add('hidden');
+            document.getElementById('view-title').innerText=currentSong.title; document.getElementById('view-artist').innerText=currentSong.artist; document.getElementById('view-key').innerText=currentSong.key; document.getElementById('view-bpm').innerText=currentSong.bpm||"-"; document.getElementById('view-tempo').innerText=currentSong.tempoVal+"/4";
+            const content=document.getElementById('view-content'); content.innerHTML='';
+            currentSong.sections.forEach(sec => {
+                const wrap=document.createElement('div'); wrap.className='view-section-wrapper';
+                const nh=sec.note?`<span class="view-section-note">${sec.note}</span>`:''; wrap.innerHTML=`<div class="view-section-title sec-${sec.type}"><span>${sec.type}</span>${nh}</div>`;
+                const grid=document.createElement('div'); grid.className='view-bars-container';
+                sec.bars.forEach(bar => {
+                    const bd=document.createElement('div'); bd.className='view-bar'; if(bar.repStart)bd.classList.add('rep-start'); if(bar.repEnd)bd.classList.add('rep-end');
+                    bd.style.gridTemplateColumns=`repeat(${currentSong.tempoVal},1fr)`;
+                    let beats=[...(bar.beats||[])], mels=[...(bar.melody||[])]; while(beats.length<currentSong.tempoVal)beats.push(""); while(mels.length<currentSong.tempoVal)mels.push("");
+                    for(let i=0;i<currentSong.tempoVal;i++){ let d=beats[i],c="view-chord"; if(!d||d.trim()===""){d="•";c+=" empty-dot";} bd.innerHTML+=`<div class="view-beat-box"><div class="view-melody">${mels[i]}</div><div class="${c}">${d}</div></div>`; }
+                    grid.appendChild(bd);
+                });
+                wrap.appendChild(grid); content.appendChild(wrap);
+            });
+        }
+        
+        // V13 ZOOM LOGIC
+        function updateZoom(v) { document.documentElement.style.setProperty('--font-chord', v+"px"); }
+        
         function editCurrent() { openEditor(currentSong.id); }
-        function switchTab(t) { 
-            if(t=='songs'){document.getElementById('content-songs').classList.remove('hidden'); document.getElementById('content-sets').classList.add('hidden');}
-            else {document.getElementById('content-songs').classList.add('hidden'); document.getElementById('content-sets').classList.remove('hidden');}
+
+        // BACKUP & RESTORE (With Cloud)
+        function renderDataPanel() { document.getElementById('data-export').value = JSON.stringify({songs, setlists}); }
+        function copyData() { const el=document.getElementById('data-export'); el.select(); document.execCommand('copy'); navigator.clipboard.writeText(el.value).then(()=>alert("Copied!")); }
+        
+        // NEW: Download Feature
+        function downloadBackup() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({songs, setlists}, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "chord_backup_" + new Date().toISOString().slice(0,10) + ".json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
         }
 
-        // INIT
-        checkLogin();
+        function importData() {
+            try {
+                const j=document.getElementById('data-import').value; if(!j)return; const d=JSON.parse(j);
+                let impS=[], impL=[]; if(Array.isArray(d)) impS=d; else { impS=d.songs; impL=d.setlists||[]; }
+                let sa=0, su=0; impS.forEach(n=>{ const i=songs.findIndex(s=>s.id===n.id); if(i>=0){songs[i]=n;su++;}else{songs.push(n);sa++;} });
+                if(impL.length>0) impL.forEach(n=>{ const i=setlists.findIndex(s=>s.id===n.id); if(i>=0)setlists[i]=n; else setlists.push(n); });
+                saveToCloud(); goHome(); alert(`Done! +${sa} New, ${su} Update.`);
+            } catch(e){ alert("Error."); }
+        }
 
+        renderList(); renderDataPanel(); document.getElementById('tempo').addEventListener('change', renderEditor);
+        
+        // START CLOUD CHECK
+        checkLogin();
     </script>
 </body>
 </html>
