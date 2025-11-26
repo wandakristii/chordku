@@ -84,12 +84,13 @@
             white-space: nowrap; 
             letter-spacing: -0.5px;
         }
-        /* Superscript untuk extensions (#, b, angka) */
+        /* CSS Superscript (Angka Pangkat) */
         .chord-sup {
-            font-size: 0.7em;
-            vertical-align: top;
+            font-size: 0.7em;      /* Ukuran kecil */
+            vertical-align: super; /* Naik ke atas */
+            font-weight: normal;   /* <--- KEMBALI KE TIPIS (Sesuai request) */
             margin-left: 1px;
-            font-weight: normal; /* Supaya tidak terlalu tebal */
+            line-height: 0;
         }
         /* Bass Note (angka setelah /) */
         .chord-bass {
@@ -367,37 +368,50 @@
         }
         function deleteSong() { if(confirm("Hapus?")) { songs=songs.filter(s=>s.id!=document.getElementById('song-id').value); saveToCloud(); goHome(); } }
 
-        // --- SMART CHORD FORMATTER (NEW) ---
+        // --- SMART CHORD FORMATTER V16.3 (Fix Dempet & Spasi) ---
         function formatChordHtml(raw) {
             if (!raw) return "";
             if (raw === "•") return "•";
 
-            let parts = raw.split('/');
+            // 1. Fitur Anti-Dempet: Jika ada spasi, pecah jadi 2 chord
+            if (raw.includes(" ")) {
+                let chords = raw.split(" "); // Pisahkan "4(2)/6" dan "5(2)/7"
+                // Format satu per satu, lalu gabung dengan jarak (nbsp)
+                return chords.map(c => formatSingleChord(c)).join("&nbsp;&nbsp;"); 
+            } else {
+                return formatSingleChord(raw);
+            }
+        }
+
+        // Fungsi pembantu memformat 1 chord
+        function formatSingleChord(chord) {
+            let parts = chord.split('/');
             let main = parts[0];
             let bass = parts.length > 1 ? parts[1] : null;
 
-            // 1. Pisahkan Root (Angka/Huruf Awal) dari Quality (sisanya)
-            // Regex: Ambil angka/huruf di awal (termasuk b/# di depannya jika ada, misal b7)
-            let match = main.match(/^([b#]?[0-9]+|[A-G][b#]?)(.*)$/);
+            // PERBAIKAN DISINI:
+            // [0-9]+ diganti jadi [1-7]
+            // Artinya: Hanya baca angka 1-7 sebagai induk.
+            // Jika ada angka lain di belakangnya (misal 2 di "42"), itu dianggap ekor/variasi.
+            let match = main.match(/^([b#]?[1-7]|[A-G][b#]?)(.*)$/);
             
             if (match) {
-                let root = match[1]; // Contoh: 1, 6, C, F#
-                let quality = match[2]; // Contoh: m7, sus4, (2)
+                let root = match[1];    // Sekarang "42" akan terpisah: Root="4"
+                let quality = match[2]; // Quality="2" (Ini yg akan naik ke atas)
 
-                // Format Quality: Angka, #, b, (), dikasih Superscript
-                // Hati-hati: jangan ubah 'm', 'M', 'sus', 'dim'
-                let formattedQuality = quality.replace(/([0-9]+|#|b|\(.*\))/g, '<span class="chord-sup">$1</span>');
+                // Format Quality: Angka, Kurung, #, b naik ke atas (Superscript)
+                // Huruf 'm', 'M', 'sus' biarkan normal (sejajar)
+                let formattedQuality = quality.replace(/([0-9()#b]+)/g, '<span class="chord-sup">$1</span>');
                 
                 let html = `${root}${formattedQuality}`;
                 
-                // Jika ada Bass
+                // Tambahkan Bass jika ada
                 if (bass) {
                     html += `<span class="chord-slash">/</span><span class="chord-bass">${bass}</span>`;
                 }
                 return html;
             }
-            
-            return raw; // Jika tidak match pola, kembalikan aslinya
+            return chord; // Kembalikan apa adanya jika tidak sesuai pola
         }
 
         function showDetail(id, isGigMode=false) {
