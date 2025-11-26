@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <title>ChordKu</title>
+    <title>Chord Master V16</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,103 +15,109 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <style>
-        /* --- STYLE ASLI V13 (TIDAK DIUBAH) --- */
         :root {
-            --bg-color: #ffffff;
-            --card-bg: #f8f9fa; 
-            --text-main: #000000;
-            --text-sec: #555555;
-            --accent: #2962ff; 
-            --accent-sec: #00c853; 
-            --border: #ddd;
+            --bg-color: #ffffff; --card-bg: #f8f9fa; --text-main: #000000; --text-sec: #555555;
+            --accent: #2962ff; --accent-sec: #00c853; --border: #ddd;
             --col-verse: #000; --col-chorus: #d50000; --col-bridge: #ff6d00; --col-intro: #6200ea; 
-            --font-chord: 22px;
-            --font-stack: 'Roboto Condensed', 'Avenir Next Condensed', 'Arial Narrow', sans-serif;
+            --font-chord: 22px; --font-stack: 'Roboto Condensed', sans-serif;
         }
-
-        body {
-            font-family: var(--font-stack); background-color: var(--bg-color); color: var(--text-main);
-            margin: 0; padding: 10px; padding-bottom: 180px; 
-        }
-
+        body { font-family: var(--font-stack); background: var(--bg-color); color: var(--text-main); margin: 0; padding: 10px; padding-bottom: 180px; }
         .hidden { display: none !important; }
-        .btn { border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-family: var(--font-stack); font-size: 16px; margin-bottom: 5px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        .btn-primary { background-color: var(--accent); color: #fff; }
-        .btn-secondary { background-color: #e0e0e0; color: #000; }
-        .btn-danger { background-color: #ffcdd2; color: #b71c1c; }
-        .btn-outline { border: 1px solid var(--accent); color: var(--accent); background: transparent; padding: 6px 12px; margin-right: 5px; }
-        .btn-action { background: #eee; color: #333; font-size: 14px; width: 100%; border: 1px solid #ccc; }
-        .btn-sm { padding: 5px 10px; font-size: 14px; }
-        .btn-download { background: #e3f2fd; color: #1565c0; border: 1px solid #bbdefb; } /* Added style for download btn */
+        .btn { border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; margin-bottom: 5px; }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-secondary { background: #e0e0e0; color: #000; }
+        .btn-danger { background: #ffcdd2; color: #b71c1c; }
+        .btn-download { background: #e3f2fd; color: #1565c0; border: 1px solid #bbdefb; }
+        .btn-sm { width: auto; padding: 5px 10px; font-size: 14px; }
+        .btn-action { background: #eee; color: #333; border: 1px solid #ccc; }
+        .tool-btn { background: #fff; border: 1px solid #ccc; padding: 6px 10px; border-radius: 4px; font-weight: bold; min-width: 35px; cursor: pointer;}
+        .tool-btn.active { background: var(--accent); color: #fff; }
         
-        .tool-btn { background: #fff; color: #888; border: 1px solid #ccc; padding: 6px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; min-width: 35px; }
-        .tool-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-
-        input, select, textarea { background: #fff; border: 1px solid #aaa; color: #000; padding: 12px; border-radius: 8px; font-family: var(--font-stack); font-size: 18px; box-sizing: border-box; width: 100%; }
+        input, select, textarea { background: #fff; border: 1px solid #aaa; padding: 12px; border-radius: 8px; font-family: var(--font-stack); font-size: 18px; width: 100%; box-sizing: border-box; margin-bottom: 5px; }
         
         .search-container { margin-bottom: 15px; position: relative; }
-        .search-input { padding-left: 40px; background-color: #f0f0f0; border: none; }
-        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 1.2em; color: #888; pointer-events: none; }
+        .search-input { padding-left: 40px; background: #f0f0f0; border: none; }
+        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #888; }
 
         .nav-tabs { display: flex; gap: 10px; margin-bottom: 15px; }
         .tab-btn { flex: 1; padding: 10px; border: none; background: #eee; border-radius: 8px; font-weight: bold; color: #666; }
         .tab-btn.active { background: var(--accent); color: white; }
 
-        .song-card { background-color: var(--card-bg); padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #ddd; border-left: 5px solid var(--accent); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        
+        .song-card { background: var(--card-bg); padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #ddd; border-left: 5px solid var(--accent); }
         .setlist-card { background: #fff8e1; border: 1px solid #ffe082; padding: 15px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
         
         .ordered-list-container { background: #e3f2fd; border: 1px solid #bbdefb; padding: 10px; border-radius: 8px; margin-bottom: 20px; max-height: 300px; overflow-y: auto; }
-        .ordered-item { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 8px; margin-bottom: 5px; border-radius: 4px; border: 1px solid #ddd; }
-        .order-controls { display: flex; gap: 5px; }
-
+        .ordered-item { display: flex; justify-content: space-between; background: #fff; padding: 8px; margin-bottom: 5px; border: 1px solid #ddd; border-radius: 4px; }
         .song-checkbox-item { display: flex; align-items: center; padding: 10px; border-bottom: 1px solid #eee; }
         .song-checkbox-item input { width: 25px; height: 25px; margin-right: 15px; }
 
-        .section-block { background: #fff; border: 1px solid #ccc; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .section-block { background: #fff; border: 1px solid #ccc; margin-bottom: 20px; border-radius: 8px; }
         .section-header { background: #f0f0f0; padding: 10px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; gap: 10px; border-bottom: 1px solid #ddd; }
-        .section-note-input { background: transparent; border: none; border-bottom: 1px dashed #999; color: var(--accent); font-size: 0.9em; text-align: right; padding: 5px; width: 50%; }
-        .bar-wrapper { padding: 10px; border-bottom: 1px solid #eee; position: relative; }
-        .bar-tools { display: flex; justify-content: space-between; margin-top: 8px; background: #f9f9f9; padding: 5px; border-radius: 6px; }
-        
+        .section-note-input { background: transparent; border: none; border-bottom: 1px dashed #999; color: var(--accent); text-align: right; width: 50%; }
+        .bar-wrapper { padding: 10px; border-bottom: 1px solid #eee; }
         .grid-row { display: grid; gap: 4px; }
-        .beat-container { display: flex; flex-direction: column; gap: 2px; }
-        .melody-input { width: 100%; text-align: center; background: transparent; border: none; border-bottom: 1px dashed #ccc; color: var(--accent-sec); font-size: 0.9em; font-weight: bold; }
-        .beat-input { width: 100%; text-align: center; font-weight: bold; font-size: 1.2em; padding: 8px 0; background: #fff; border: 1px solid #ccc; color: #000; border-radius: 4px; }
+        .beat-input { text-align: center; font-weight: bold; font-size: 1.2em; padding: 8px 0; border: 1px solid #ccc; border-radius: 4px; }
+        .melody-input { text-align: center; border: none; border-bottom: 1px dashed #ccc; color: var(--accent-sec); font-weight: bold; font-size: 0.9em; }
+        .bar-tools { display: flex; justify-content: space-between; margin-top: 8px; background: #f9f9f9; padding: 5px; border-radius: 6px; }
 
-        .view-section-wrapper { margin-bottom: 15px; }
-        .view-section-title { color: #333; font-size: 0.9em; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; border-bottom: 2px solid #000; padding-bottom: 2px; display: flex; justify-content: space-between; align-items: baseline; }
+        .view-section-title { font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; border-bottom: 2px solid #000; padding-bottom: 2px; display: flex; justify-content: space-between; }
         .sec-Chorus .view-section-title { color: var(--col-chorus); border-color: var(--col-chorus); }
-        .sec-Bridge .view-section-title { color: var(--col-bridge); border-color: var(--col-bridge); }
         .sec-Intro .view-section-title { color: var(--col-intro); border-color: var(--col-intro); }
+        .view-section-note { color: var(--accent-sec); text-transform: none; font-style: italic; font-size: 0.9em; }
         
-        .view-section-note { color: var(--accent-sec); font-size: 0.9em; text-transform: none; letter-spacing: 0; font-style: italic; font-weight: bold;}
-        
-        .view-bars-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; width: 100%; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; }
-        .view-bar { display: grid; position: relative; border-right: 1px solid #ccc; padding: 4px 0; overflow: hidden; box-sizing: border-box; }
+        .view-bars-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; }
+        .view-bar { display: grid; border-right: 1px solid #ccc; padding: 4px 0; overflow: hidden; }
         .view-bar:nth-child(4n) { border-right: none; }
         .view-bar.rep-start { border-left: 5px solid #000 !important; padding-left: 2px; }
         .view-bar.rep-end { border-right: 5px solid #000 !important; }
         .view-bar:nth-child(4n).rep-end { border-right: 5px solid #000 !important; }
-
+        
         .view-beat-box { background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 45px; }
-        .view-melody { color: var(--accent-sec); font-size: 0.8em; margin-bottom: 0px; min-height: 12px; line-height: 1; white-space: nowrap; letter-spacing: -0.5px; font-weight: bold; }
-        .view-chord { color: #000; font-weight: 800; font-size: var(--font-chord); line-height: 1; white-space: nowrap; letter-spacing: -1px; }
-        .empty-dot { color: #ccc; font-weight: normal; font-size: 0.8em; letter-spacing: 0; }
+        .view-melody { color: var(--accent-sec); font-size: 0.8em; text-align: center; font-weight: bold; min-height: 12px; }
+        
+        /* --- NEW CHORD FORMATTING STYLES --- */
+        .view-chord { 
+            color: #000; 
+            font-weight: 800; 
+            font-size: var(--font-chord); 
+            line-height: 1; 
+            white-space: nowrap; 
+            letter-spacing: -0.5px;
+        }
+        /* Superscript untuk extensions (#, b, angka) */
+        .chord-sup {
+            font-size: 0.7em;
+            vertical-align: top;
+            margin-left: 1px;
+            font-weight: normal; /* Supaya tidak terlalu tebal */
+        }
+        /* Bass Note (angka setelah /) */
+        .chord-bass {
+            font-size: 1em; 
+            color: #000;
+            font-weight: 800; /* <--- UBAH INI (Agar sama tebal dengan induknya) */
+        }
+        
+        /* Garis Miring */
+        .chord-slash {
+            font-size: 1em; 
+            color: #000;
+            font-weight: 800; /* <--- INI JUGA DIBUAT TEBAL */
+            margin: 0 1px;
+        }
+        .empty-dot { color: #ccc; font-weight: normal; font-size: 0.8em; }
         
         .zoom-panel { display: flex; align-items: center; gap: 10px; background: #fff; padding: 8px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ccc; }
         
-        .gig-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border: 1px solid #ccc; border-radius: 0; padding: 10px; display: flex; gap: 10px; z-index: 200; box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
-        .gig-btn { flex: 1; padding: 15px; font-size: 18px; border-radius: 8px; }
+        .gig-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; border-top: 1px solid #ccc; padding: 10px; display: flex; gap: 10px; z-index: 200; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
+        .gig-btn { flex: 1; padding: 15px; font-size: 18px; border-radius: 8px; margin: 0; }
 
         .fab { position: fixed; bottom: 90px; right: 20px; width: 55px; height: 55px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 28px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; z-index: 100; }
-        .add-menu { overflow-x: auto; white-space: nowrap; padding-bottom: 5px;}
-
-        /* --- NEW: CLOUD LOGIN STYLES --- */
-        #login-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; display:flex; justify-content:center; align-items:center; }
-        .login-box { background:white; padding:25px; border-radius:12px; width:85%; max-width:320px; text-align:center; }
-        .cloud-status { background:#e8f5e9; color:#2e7d32; padding:8px; font-size:12px; border-radius:5px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; border:1px solid #c8e6c9; }
-        .status-dot { height:8px; width:8px; background-color:#00c853; border-radius:50%; display:inline-block; margin-right:5px; box-shadow:0 0 5px #00c853; }
+        
+        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; justify-content: center; align-items: center; }
+        .login-box { background: white; padding: 25px; border-radius: 12px; width: 85%; max-width: 320px; text-align: center; }
+        .cloud-status { background: #e8f5e9; color: #2e7d32; padding: 8px; font-size: 12px; border-radius: 5px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #c8e6c9; }
+        .status-dot { height: 8px; width: 8px; background-color: #00c853; border-radius: 50%; display: inline-block; margin-right: 5px; box-shadow: 0 0 5px #00c853; }
     </style>
 </head>
 <body>
@@ -131,38 +137,26 @@
     </div>
 
     <div id="list-view">
-        <h2 style="margin: 10px 0 15px 0;">ChordKu</h2>
-        
+        <h2 style="margin: 10px 0 15px 0;">Chord Master V16</h2>
         <div class="nav-tabs">
             <button class="tab-btn active" id="tab-songs" onclick="switchTab('songs')">Library</button>
             <button class="tab-btn" id="tab-sets" onclick="switchTab('sets')">Setlists</button>
         </div>
-
         <div id="content-songs">
-            <div class="search-container">
-                <span class="search-icon">🔍</span>
-                <input type="search" id="search-input" class="search-input" placeholder="Cari Judul..." oninput="searchSongs()">
-            </div>
+            <div class="search-container"><span class="search-icon">🔍</span><input type="search" id="search-input" class="search-input" placeholder="Cari Judul..." oninput="searchSongs()"></div>
             <div id="songs-list"></div>
         </div>
-
         <div id="content-sets" class="hidden">
-            <button class="btn btn-primary" onclick="createNewSetlist()" style="width:100%; margin-bottom:15px;">+ Buat Setlist Baru</button>
-            <div id="sets-list"></div>
+            <button class="btn btn-primary" onclick="createNewSetlist()">+ Buat Setlist Baru</button>
+            <div id="sets-list" style="margin-top: 15px;"></div>
         </div>
-
         <button id="fab-add" class="fab" onclick="openEditor()">+</button>
-
         <div class="data-panel" style="margin-top: 40px; border-top: 1px solid #ccc; padding-top: 20px;">
             <h3 style="margin-top:0; font-size:14px; color:#aaa;">📥 Backup & Restore</h3>
-            
             <button class="btn btn-download" onclick="downloadBackup()" style="width:100%; margin-bottom:10px;">💾 Download Backup (.json)</button>
-            
             <textarea id="data-export" class="data-area" readonly onclick="this.select()" style="height: 50px; font-size: 10px;"></textarea>
             <button class="btn btn-action" onclick="copyData()">Copy Text</button>
-            
             <hr style="border-color:#ccc; margin: 15px 0;">
-            
             <textarea id="data-import" class="data-area" placeholder="Paste data..." style="height: 50px; font-size: 10px;"></textarea>
             <button class="btn btn-primary" onclick="importData()">Restore to Cloud</button>
         </div>
@@ -171,7 +165,7 @@
     <div id="setlist-editor" class="hidden">
         <div style="background:#fff; padding:15px; position:sticky; top:0; border-bottom:1px solid #ccc; z-index: 20;">
             <h3 style="margin:0 0 10px 0;">Edit Setlist</h3>
-            <input type="text" id="set-name" placeholder="Nama Event (misal: Wedding Sabtu)">
+            <input type="text" id="set-name" placeholder="Nama Event">
             <div style="margin-top:10px; display:flex; gap:10px;">
                 <button class="btn btn-secondary" onclick="closeSetlistEditor()" style="flex:1">Batal</button>
                 <button class="btn btn-primary" onclick="saveSetlist()" style="flex:1">Simpan</button>
@@ -179,13 +173,11 @@
         </div>
         <div style="padding:15px; background:#fff;">
             <h4>1. Urutan Main (Geser ↑ ↓)</h4>
-            <div id="setlist-ordered-list" class="ordered-list-container">
-                <p style="text-align:center; color:#666; font-size:0.9em;">Belum ada lagu dipilih.</p>
-            </div>
+            <div id="setlist-ordered-list" class="ordered-list-container"><p style="text-align:center; color:#666;">Belum ada.</p></div>
             <h4 style="margin-top:20px;">2. Pilih Lagu (A-Z)</h4>
             <div id="setlist-song-select"></div>
         </div>
-        <button class="btn btn-danger" onclick="deleteSetlist()" style="margin:20px; width:90%;">Hapus Setlist Ini</button>
+        <button class="btn btn-danger" onclick="deleteSetlist()" style="margin:20px; width:90%;">Hapus Setlist</button>
     </div>
 
     <div id="editor-view" class="hidden">
@@ -197,13 +189,13 @@
         <div style="margin-bottom:10px;"><input type="text" id="title" placeholder="Judul Lagu"></div>
         <div style="margin-bottom:10px;"><input type="text" id="artist" placeholder="Artis"></div>
         <div style="display:flex; gap:5px; margin-bottom:20px;">
-            <input type="text" id="key" placeholder="Key (ex: G -> A)" style="flex:2;">
+            <input type="text" id="key" placeholder="Key" style="flex:2;">
             <input type="number" id="bpm" placeholder="BPM" style="flex:1;">
             <select id="tempo" style="flex:1;"><option value="4">4/4</option><option value="3">3/4</option><option value="2">2/4</option><option value="6">6/8</option></select>
         </div>
         <div id="editor-sections"></div>
         <div style="margin-top:20px; background:#f5f5f5; padding:10px; border-radius:8px;">
-            <div class="add-menu">
+            <div style="display:flex; gap:5px; overflow-x:auto;">
                 <button class="btn btn-outline" onclick="addSection('Intro')">Intro</button>
                 <button class="btn btn-outline" onclick="addSection('Verse')">Verse</button>
                 <button class="btn btn-outline" onclick="addSection('Chorus')">Chorus</button>
@@ -221,17 +213,14 @@
             <button class="btn btn-secondary btn-sm" onclick="editCurrent()">Edit</button>
         </div>
         <div style="text-align:center; margin-bottom:10px;">
-            <h3 id="view-title" style="margin:0; font-size:1.8em; letter-spacing: -0.5px;">Judul</h3>
+            <h3 id="view-title" style="margin:0; font-size:1.8em;">Judul</h3>
             <div style="font-size:1em; color:#555; margin-top:5px; font-weight:bold;">
-                Key: <span id="view-key" style="color:var(--accent);"></span> • 
-                BPM: <span id="view-bpm"></span> • 
-                <span id="view-tempo"></span>
+                Key: <span id="view-key" style="color:var(--accent);"></span> • BPM: <span id="view-bpm"></span> • <span id="view-tempo"></span>
             </div>
             <div id="view-artist" style="color:#888; font-size:0.9em;">Artist</div>
         </div>
         <div class="zoom-panel">
-            <span style="font-size:14px;">Zoom:</span>
-            <input type="range" min="16" max="42" value="22" style="flex:1" oninput="updateZoom(this.value)">
+            <span>Zoom:</span> <input type="range" min="16" max="42" value="22" style="flex:1" oninput="updateZoom(this.value)">
         </div>
         <div id="view-content"></div>
         
@@ -254,19 +243,12 @@
         };
         // -----------------------------------------
 
-        // INIT FIREBASE
-        let db;
-        try { firebase.initializeApp(firebaseConfig); db = firebase.database(); } 
-        catch(e) { console.error("Firebase Error", e); }
-
-        // APP STATE
+        let db; try { firebase.initializeApp(firebaseConfig); db = firebase.database(); } catch(e) { console.error("Firebase Err", e); }
         let secretCode = localStorage.getItem('my_secret_code');
         let songs = [], setlists = [];
         let currentSong = null, currentSetlist = null, currentSetIndex = -1;
-        let editState = { sections: [] };
-        let tempSetlistIds = [], editingSetlistId = null;
+        let editState = { sections: [] }, tempSetlistIds = [], editingSetlistId = null;
 
-        // --- 1. LOGIN & CONNECT ---
         function checkLogin() {
             if(secretCode) {
                 document.getElementById('login-overlay').classList.add('hidden');
@@ -282,17 +264,13 @@
         }
         function logoutCloud() { localStorage.removeItem('my_secret_code'); location.reload(); }
 
-        // --- 2. SYNC & SAVE (Core Logic) ---
         function startSync() {
             if(!db) return;
             db.ref('users/' + secretCode).on('value', (snapshot) => {
                 const data = snapshot.val();
                 if(data) { songs = data.songs || []; setlists = data.setlists || []; }
                 else { songs = []; setlists = []; }
-                
-                // Refresh UI depending on where we are
-                if(!document.getElementById('content-sets').classList.contains('hidden')) renderSetlists();
-                else searchSongs(); 
+                if(!document.getElementById('content-sets').classList.contains('hidden')) renderSetlists(); else searchSongs(); 
                 renderDataPanel();
             });
         }
@@ -301,12 +279,9 @@
             db.ref('users/' + secretCode).set({ songs, setlists, updated: new Date().toISOString() });
         }
 
-        // --- 3. STANDARD FUNCTIONS (From V13 + SaveToCloud) ---
         function switchTab(tab) {
-            document.getElementById('content-songs').classList.add('hidden');
-            document.getElementById('content-sets').classList.add('hidden');
-            document.getElementById('tab-songs').classList.remove('active');
-            document.getElementById('tab-sets').classList.remove('active');
+            document.getElementById('content-songs').classList.add('hidden'); document.getElementById('content-sets').classList.add('hidden');
+            document.getElementById('tab-songs').classList.remove('active'); document.getElementById('tab-sets').classList.remove('active');
             document.getElementById('fab-add').classList.add('hidden');
             if(tab === 'songs') {
                 document.getElementById('content-songs').classList.remove('hidden'); document.getElementById('tab-songs').classList.add('active'); document.getElementById('fab-add').classList.remove('hidden');
@@ -315,60 +290,48 @@
                 document.getElementById('content-sets').classList.remove('hidden'); document.getElementById('tab-sets').classList.add('active'); renderSetlists();
             }
         }
-
         function goHome() {
             document.getElementById('list-view').classList.remove('hidden'); document.getElementById('editor-view').classList.add('hidden'); document.getElementById('detail-view').classList.add('hidden'); document.getElementById('setlist-editor').classList.add('hidden'); document.getElementById('gig-nav').classList.add('hidden');
             if(!document.getElementById('content-sets').classList.contains('hidden')) renderSetlists(); else { renderList(); document.getElementById('search-input').value = ''; }
             renderDataPanel();
         }
         function exitDetail() { currentSetIndex = -1; goHome(); }
-        
         function searchSongs() {
-            const query = document.getElementById('search-input').value.toLowerCase();
-            const filtered = songs.filter(s => s.title.toLowerCase().includes(query) || (s.artist && s.artist.toLowerCase().includes(query)));
-            renderList(filtered);
+            const q = document.getElementById('search-input').value.toLowerCase();
+            const f = songs.filter(s => s.title.toLowerCase().includes(q) || (s.artist && s.artist.toLowerCase().includes(q)));
+            renderList(f);
         }
-        function renderList(dataToRender = null) {
+        function renderList(d = null) {
             const list = document.getElementById('songs-list'); list.innerHTML = '';
-            let data = dataToRender || songs;
-            data.sort((a,b) => a.title.localeCompare(b.title));
+            let data = d || songs; data.sort((a,b) => a.title.localeCompare(b.title));
             if(data.length === 0) { list.innerHTML = '<p style="text-align:center;color:#888;margin-top:20px;">Tidak ada lagu.</p>'; return; }
-            data.forEach(s => {
-                const div = document.createElement('div'); div.className = 'song-card'; div.onclick = () => showDetail(s.id);
-                div.innerHTML = `<div style="font-size:0.8em;color:#555;font-weight:bold;">${s.artist||'Tanpa Artis'}</div><b style="font-size:1.1em;">${s.title}</b><div style="color:#666;font-size:0.8em;margin-top:4px;">Key: ${s.key} • BPM: ${s.bpm||'-'}</div>`;
-                list.appendChild(div);
-            });
+            data.forEach(s => { list.innerHTML += `<div class="song-card" onclick="showDetail(${s.id})"><b>${s.title}</b><br><small>${s.artist||''}</small></div>`; });
         }
 
-        // SETLIST
         function renderSetlists() {
-            const container = document.getElementById('sets-list'); container.innerHTML = '';
-            if(setlists.length === 0) container.innerHTML = '<p style="text-align:center;color:#888;">Belum ada setlist.</p>';
-            setlists.forEach(set => { container.innerHTML += `<div class="setlist-card"><div onclick="playSetlist(${set.id})" style="flex:1; cursor:pointer;"><div style="font-weight:bold; font-size:1.1em;">${set.name}</div><div style="font-size:0.9em; color:#666;">${set.songIds.length} Lagu</div></div><button class="btn btn-secondary btn-sm" onclick="editSetlist(${set.id})">Edit</button></div>`; });
+            const c = document.getElementById('sets-list'); c.innerHTML = '';
+            setlists.forEach(s => { c.innerHTML += `<div class="setlist-card"><div onclick="playSetlist(${s.id})" style="flex:1; cursor:pointer;"><b>${s.name}</b> (${s.songIds.length})</div><button class="btn-sm btn-secondary" onclick="editSetlist(${s.id})">Edit</button></div>`; });
         }
         function createNewSetlist() { editingSetlistId = null; document.getElementById('set-name').value = ''; tempSetlistIds = []; openSetlistEditorUI(); }
-        function editSetlist(id) { const set = setlists.find(s => s.id === id); editingSetlistId = id; document.getElementById('set-name').value = set.name; tempSetlistIds = [...set.songIds]; openSetlistEditorUI(); }
+        function editSetlist(id) { const s=setlists.find(x=>x.id===id); editingSetlistId=id; document.getElementById('set-name').value=s.name; tempSetlistIds=[...s.songIds]; openSetlistEditorUI(); }
         function openSetlistEditorUI() { renderSetlistUI(); document.getElementById('list-view').classList.add('hidden'); document.getElementById('setlist-editor').classList.remove('hidden'); }
         function renderSetlistUI() {
-            const orderedContainer = document.getElementById('setlist-ordered-list'); orderedContainer.innerHTML = '';
-            if (tempSetlistIds.length === 0) { orderedContainer.innerHTML = '<p style="text-align:center; color:#666; font-size:0.9em;">Belum ada lagu dipilih.</p>'; } 
-            else { tempSetlistIds.forEach((id, index) => { const song = songs.find(s => s.id === id); if(!song) return; orderedContainer.innerHTML += `<div class="ordered-item"><div><b>${index+1}.</b> ${song.title}</div><div class="order-controls"><button class="tool-btn" onclick="moveSetSong(${index}, -1)">↑</button><button class="tool-btn" onclick="moveSetSong(${index}, 1)">↓</button><button class="tool-btn" style="color:red;" onclick="toggleSetSong(${id})">X</button></div></div>`; }); }
-            const checkContainer = document.getElementById('setlist-song-select'); checkContainer.innerHTML = '';
-            [...songs].sort((a,b)=>a.title.localeCompare(b.title)).forEach(s => { const checked = tempSetlistIds.includes(s.id) ? 'checked' : ''; checkContainer.innerHTML += `<div class="song-checkbox-item" onclick="toggleSetSong(${s.id})"><input type="checkbox" ${checked} disabled> <div style="pointer-events:none;"><div style="font-weight:bold;">${s.title}</div><div style="font-size:0.8em; color:#666;">${s.key} • ${s.artist}</div></div></div>`; });
+            const ol = document.getElementById('setlist-ordered-list'); ol.innerHTML='';
+            if (tempSetlistIds.length === 0) { ol.innerHTML = '<p style="text-align:center; color:#666; font-size:0.9em;">Belum ada lagu.</p>'; } 
+            else { tempSetlistIds.forEach((id,i) => { const s=songs.find(x=>x.id===id); if(s) ol.innerHTML+=`<div class="ordered-item"><div><b>${i+1}.</b> ${s.title}</div><div class="order-controls"><button class="tool-btn" onclick="moveSetSong(${i},-1)">↑</button><button class="tool-btn" onclick="moveSetSong(${i},1)">↓</button><button class="tool-btn" style="color:red" onclick="toggleSetSong(${id})">X</button></div></div>`; }); }
+            const sl = document.getElementById('setlist-song-select'); sl.innerHTML='';
+            songs.sort((a,b)=>a.title.localeCompare(b.title)).forEach(s => { sl.innerHTML += `<div class="song-checkbox-item" onclick="toggleSetSong(${s.id})"><input type="checkbox" ${tempSetlistIds.includes(s.id)?'checked':''} disabled> ${s.title}</div>`; });
         }
-        function toggleSetSong(id) { const idx = tempSetlistIds.indexOf(id); if (idx >= 0) tempSetlistIds.splice(idx, 1); else tempSetlistIds.push(id); renderSetlistUI(); }
-        function moveSetSong(index, direction) { if ((direction === -1 && index > 0) || (direction === 1 && index < tempSetlistIds.length - 1)) { [tempSetlistIds[index], tempSetlistIds[index + direction]] = [tempSetlistIds[index + direction], tempSetlistIds[index]]; renderSetlistUI(); } }
-        
-        // SAVE SETLIST (With Cloud)
+        function toggleSetSong(id) { const i=tempSetlistIds.indexOf(id); if(i>=0) tempSetlistIds.splice(i,1); else tempSetlistIds.push(id); renderSetlistUI(); }
+        function moveSetSong(i,d) { if((d===-1&&i>0)||(d===1&&i<tempSetlistIds.length-1)) { [tempSetlistIds[i],tempSetlistIds[i+d]]=[tempSetlistIds[i+d],tempSetlistIds[i]]; renderSetlistUI(); } }
         function saveSetlist() { const name = document.getElementById('set-name').value; if(!name) { alert("Nama?"); return; } if(editingSetlistId) { setlists[setlists.findIndex(s=>s.id===editingSetlistId)] = { id: editingSetlistId, name, songIds: tempSetlistIds }; } else { setlists.push({ id: Date.now(), name, songIds: tempSetlistIds }); } saveToCloud(); closeSetlistEditor(); }
-        function deleteSetlist() { if(confirm("Hapus?")) { setlists = setlists.filter(s=>s.id!==editingSetlistId); saveToCloud(); closeSetlistEditor(); } }
+        function deleteSetlist() { if(confirm("Hapus?")) { setlists=setlists.filter(s=>s.id!==editingSetlistId); saveToCloud(); closeSetlistEditor(); } }
         function closeSetlistEditor() { document.getElementById('setlist-editor').classList.add('hidden'); document.getElementById('list-view').classList.remove('hidden'); renderSetlists(); }
         function playSetlist(id) { currentSetlist = setlists.find(s => s.id === id); if(currentSetlist.songIds.length===0){alert("Kosong!");return;} currentSetIndex=0; loadGigSong(); }
         function loadGigSong() { showDetail(currentSetlist.songIds[currentSetIndex], true); }
         function nextSetSong() { if(currentSetIndex<currentSetlist.songIds.length-1) { currentSetIndex++; loadGigSong(); } else alert("Selesai!"); }
         function prevSetSong() { if(currentSetIndex>0) { currentSetIndex--; loadGigSong(); } }
 
-        // EDITOR
         function openEditor(songId = null) {
             document.getElementById('list-view').classList.add('hidden'); document.getElementById('detail-view').classList.add('hidden'); document.getElementById('editor-view').classList.remove('hidden'); window.scrollTo(0,0);
             if (songId) { currentSong = songs.find(s => s.id === songId); document.getElementById('song-id').value = currentSong.id; document.getElementById('title').value = currentSong.title; document.getElementById('artist').value = currentSong.artist||""; document.getElementById('key').value = currentSong.key; document.getElementById('bpm').value = currentSong.bpm||""; document.getElementById('tempo').value = currentSong.tempoVal; editState.sections = JSON.parse(JSON.stringify(currentSong.sections)); } 
@@ -397,8 +360,6 @@
                 h+=`<button class="btn btn-secondary btn-sm" style="width:100%" onclick="addBar(${sIdx})">+ Bar</button></div>`; c.innerHTML+=h;
             });
         }
-        
-        // SAVE SONG (With Cloud)
         function saveSong() {
             const id=document.getElementById('song-id').value; const title=document.getElementById('title').value; if(!title){alert("Judul?");return;}
             const data={ id:id?parseInt(id):Date.now(), title, artist:document.getElementById('artist').value, key:document.getElementById('key').value, bpm:document.getElementById('bpm').value, tempoVal:parseInt(document.getElementById('tempo').value), sections:editState.sections };
@@ -406,7 +367,39 @@
         }
         function deleteSong() { if(confirm("Hapus?")) { songs=songs.filter(s=>s.id!=document.getElementById('song-id').value); saveToCloud(); goHome(); } }
 
-        // VIEW (Zoom V13 logic maintained)
+        // --- SMART CHORD FORMATTER (NEW) ---
+        function formatChordHtml(raw) {
+            if (!raw) return "";
+            if (raw === "•") return "•";
+
+            let parts = raw.split('/');
+            let main = parts[0];
+            let bass = parts.length > 1 ? parts[1] : null;
+
+            // 1. Pisahkan Root (Angka/Huruf Awal) dari Quality (sisanya)
+            // Regex: Ambil angka/huruf di awal (termasuk b/# di depannya jika ada, misal b7)
+            let match = main.match(/^([b#]?[0-9]+|[A-G][b#]?)(.*)$/);
+            
+            if (match) {
+                let root = match[1]; // Contoh: 1, 6, C, F#
+                let quality = match[2]; // Contoh: m7, sus4, (2)
+
+                // Format Quality: Angka, #, b, (), dikasih Superscript
+                // Hati-hati: jangan ubah 'm', 'M', 'sus', 'dim'
+                let formattedQuality = quality.replace(/([0-9]+|#|b|\(.*\))/g, '<span class="chord-sup">$1</span>');
+                
+                let html = `${root}${formattedQuality}`;
+                
+                // Jika ada Bass
+                if (bass) {
+                    html += `<span class="chord-slash">/</span><span class="chord-bass">${bass}</span>`;
+                }
+                return html;
+            }
+            
+            return raw; // Jika tidak match pola, kembalikan aslinya
+        }
+
         function showDetail(id, isGigMode=false) {
             currentSong = songs.find(s=>s.id===id);
             document.getElementById('list-view').classList.add('hidden'); document.getElementById('setlist-editor').classList.add('hidden'); document.getElementById('detail-view').classList.remove('hidden'); window.scrollTo(0,0);
@@ -421,33 +414,28 @@
                     const bd=document.createElement('div'); bd.className='view-bar'; if(bar.repStart)bd.classList.add('rep-start'); if(bar.repEnd)bd.classList.add('rep-end');
                     bd.style.gridTemplateColumns=`repeat(${currentSong.tempoVal},1fr)`;
                     let beats=[...(bar.beats||[])], mels=[...(bar.melody||[])]; while(beats.length<currentSong.tempoVal)beats.push(""); while(mels.length<currentSong.tempoVal)mels.push("");
-                    for(let i=0;i<currentSong.tempoVal;i++){ let d=beats[i],c="view-chord"; if(!d||d.trim()===""){d="•";c+=" empty-dot";} bd.innerHTML+=`<div class="view-beat-box"><div class="view-melody">${mels[i]}</div><div class="${c}">${d}</div></div>`; }
+                    for(let i=0;i<currentSong.tempoVal;i++){ 
+                        let raw=beats[i];
+                        let d = (raw && raw.trim()) ? formatChordHtml(raw) : "<span class='empty-dot'>•</span>";
+                        
+                        bd.innerHTML+=`<div class="view-beat-box"><div class="view-melody">${mels[i]}</div><div class="view-chord">${d}</div></div>`; 
+                    }
                     grid.appendChild(bd);
                 });
                 wrap.appendChild(grid); content.appendChild(wrap);
             });
         }
-        
-        // V13 ZOOM LOGIC
         function updateZoom(v) { document.documentElement.style.setProperty('--font-chord', v+"px"); }
-        
         function editCurrent() { openEditor(currentSong.id); }
 
-        // BACKUP & RESTORE (With Cloud)
         function renderDataPanel() { document.getElementById('data-export').value = JSON.stringify({songs, setlists}); }
         function copyData() { const el=document.getElementById('data-export'); el.select(); document.execCommand('copy'); navigator.clipboard.writeText(el.value).then(()=>alert("Copied!")); }
-        
-        // NEW: Download Feature
         function downloadBackup() {
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({songs, setlists}, null, 2));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", "chord_backup_" + new Date().toISOString().slice(0,10) + ".json");
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
+            const a = document.createElement('a');
+            a.href = dataStr; a.download = "chord_backup_" + new Date().toISOString().slice(0,10) + ".json";
+            document.body.appendChild(a); a.click(); a.remove();
         }
-
         function importData() {
             try {
                 const j=document.getElementById('data-import').value; if(!j)return; const d=JSON.parse(j);
@@ -459,8 +447,6 @@
         }
 
         renderList(); renderDataPanel(); document.getElementById('tempo').addEventListener('change', renderEditor);
-        
-        // START CLOUD CHECK
         checkLogin();
     </script>
 </body>
