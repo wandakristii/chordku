@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <title>Chord Master V16</title>
+    <title>Chord Master V19.4</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -52,59 +52,54 @@
         .song-checkbox-item input { width: 25px; height: 25px; margin-right: 15px; }
 
         .section-block { background: #fff; border: 1px solid #ccc; margin-bottom: 20px; border-radius: 8px; }
-        .section-header { background: #f0f0f0; padding: 10px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; gap: 10px; border-bottom: 1px solid #ddd; }
-        .section-note-input { background: transparent; border: none; border-bottom: 1px dashed #999; color: var(--accent); text-align: right; width: 50%; }
+        .section-header { background: #f0f0f0; padding: 10px; font-weight: bold; display: flex; justify-content: flex-start; align-items: center; gap: 10px; border-bottom: 1px solid #ddd; }
+        .section-type-input { background: transparent; border: none; border-bottom: 1px solid #000; color: #000; font-weight: 800; font-size: 1em; width: 120px; padding: 2px; margin: 0; }
+        .section-note-input { background: transparent; border: none; border-bottom: 1px dashed #999; color: var(--accent); font-size: 0.9em; padding: 2px; width: 100px; margin: 0; flex: 1; }
+        
         .bar-wrapper { padding: 10px; border-bottom: 1px solid #eee; }
         .grid-row { display: grid; gap: 4px; }
         .beat-input { text-align: center; font-weight: bold; font-size: 1.2em; padding: 8px 0; border: 1px solid #ccc; border-radius: 4px; }
         .melody-input { text-align: center; border: none; border-bottom: 1px dashed #ccc; color: var(--accent-sec); font-weight: bold; font-size: 0.9em; }
         .bar-tools { display: flex; justify-content: space-between; margin-top: 8px; background: #f9f9f9; padding: 5px; border-radius: 6px; }
 
-        .view-section-title { font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; border-bottom: 2px solid #000; padding-bottom: 2px; display: flex; justify-content: space-between; }
+        .view-section-title { font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; border-bottom: 2px solid #000; padding-bottom: 2px; display: flex; justify-content: flex-start; align-items: baseline; gap: 10px; }
         .sec-Chorus .view-section-title { color: var(--col-chorus); border-color: var(--col-chorus); }
         .sec-Intro .view-section-title { color: var(--col-intro); border-color: var(--col-intro); }
-        .view-section-note { color: var(--accent-sec); text-transform: none; font-style: italic; font-size: 0.9em; }
+        .view-section-note { color: var(--accent-sec); text-transform: none; font-style: italic; font-size: 0.9em; font-weight: bold;}
+        
+        .view-section-wrapper { margin-bottom: 15px; }
+        .view-section-wrapper.blank-section { opacity: 0.7; margin-bottom: 25px; }
         
         .view-bars-container { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid #ccc; border-bottom: 1px solid #ccc; }
-        .view-bar { display: grid; border-right: 1px solid #ccc; padding: 4px 0; overflow: hidden; }
+        .view-bar { display: grid; border-right: 1px solid #ccc; padding: 4px 0; overflow: hidden; box-sizing: border-box; }
         .view-bar:nth-child(4n) { border-right: none; }
         .view-bar.rep-start { border-left: 5px solid #000 !important; padding-left: 2px; }
         .view-bar.rep-end { border-right: 5px solid #000 !important; }
         .view-bar:nth-child(4n).rep-end { border-right: 5px solid #000 !important; }
         
-        .view-beat-box { background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 45px; }
+        .view-beat-box { background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 45px; padding: 0 2px;}
         .view-melody { color: var(--accent-sec); font-size: 0.8em; text-align: center; font-weight: bold; min-height: 12px; }
         
-        /* --- NEW CHORD FORMATTING STYLES --- */
+        /* --- CHORD FORMATTING FIXED V19.4 --- */
         .view-chord { 
-            color: #000; 
-            font-weight: 800; 
-            font-size: var(--font-chord); 
-            line-height: 1; 
-            white-space: nowrap; 
-            letter-spacing: -0.5px;
+            color: #000; font-weight: 800; font-size: var(--font-chord); 
+            line-height: 1; white-space: nowrap; letter-spacing: -0.5px;
         }
-        /* CSS Superscript (Angka Pangkat) */
+        /* Pangkat (Superscript) */
         .chord-sup {
-            font-size: 0.7em;      /* Ukuran kecil */
-            vertical-align: super; /* Naik ke atas */
-            font-weight: normal;   /* <--- KEMBALI KE TIPIS (Sesuai request) */
-            margin-left: 1px;
-            line-height: 0;
+            font-size: 0.65em; vertical-align: super; 
+            font-weight: normal; /* Tipis (Sesuai request) */
+            margin-left: 1px; line-height: 0; 
+            color: #000; /* Hitam */
         }
-        /* Bass Note (angka setelah /) */
+        /* Bass Note (Tetap Besar) */
         .chord-bass {
-            font-size: 1em; 
-            color: #000;
-            font-weight: 800; /* <--- UBAH INI (Agar sama tebal dengan induknya) */
+            font-size: 1em; color: #000; font-weight: 800; 
         }
-        
-        /* Garis Miring: Abu Tipis */
+        /* Garis Miring (Rapat) */
         .chord-slash {
-            font-size: 0.9em;
-            color: #999;
-            font-weight: 300;
-            margin: 0; /* <--- UBAH JADI 0 (Agar rapat tanpa spasi) */
+            font-size: 0.9em; color: #999; font-weight: 300; 
+            margin: 0; 
         }
         .empty-dot { color: #ccc; font-weight: normal; font-size: 0.8em; }
         
@@ -138,7 +133,7 @@
     </div>
 
     <div id="list-view">
-        <h2 style="margin: 10px 0 15px 0;">Chord Master V16</h2>
+        <h2 style="margin: 10px 0 15px 0;">Chord Master V19.4</h2>
         <div class="nav-tabs">
             <button class="tab-btn active" id="tab-songs" onclick="switchTab('songs')">Library</button>
             <button class="tab-btn" id="tab-sets" onclick="switchTab('sets')">Setlists</button>
@@ -203,6 +198,7 @@
                 <button class="btn btn-outline" onclick="addSection('Bridge')">Bridge</button>
                 <button class="btn btn-outline" onclick="addSection('Interlude')">Interlude</button>
                 <button class="btn btn-outline" onclick="addSection('Ending')">Ending</button>
+                <button class="btn btn-outline" style="border-style:dashed; color:#555;" onclick="addSection('Label', true)">+ Label/Blank</button>
             </div>
         </div>
         <button class="btn btn-danger" onclick="deleteSong()" style="margin-top:30px; width:100%">Hapus Lagu</button>
@@ -323,8 +319,8 @@
             const sl = document.getElementById('setlist-song-select'); sl.innerHTML='';
             songs.sort((a,b)=>a.title.localeCompare(b.title)).forEach(s => { sl.innerHTML += `<div class="song-checkbox-item" onclick="toggleSetSong(${s.id})"><input type="checkbox" ${tempSetlistIds.includes(s.id)?'checked':''} disabled> ${s.title}</div>`; });
         }
-        function toggleSetSong(id) { const i=tempSetlistIds.indexOf(id); if(i>=0) tempSetlistIds.splice(i,1); else tempSetlistIds.push(id); renderSetlistUI(); }
-        function moveSetSong(i,d) { if((d===-1&&i>0)||(d===1&&i<tempSetlistIds.length-1)) { [tempSetlistIds[i],tempSetlistIds[i+d]]=[tempSetlistIds[i+d],tempSetlistIds[i]]; renderSetlistUI(); } }
+        function toggleSetSong(id) { const i=tempSetlistIds.indexOf(id); if(i>=0) tempSetlistIds.splice(i,1); else tempSetlistIds.push(id); renderSetUI(); }
+        function moveSetSong(i,d) { if((d===-1&&i>0)||(d===1&&i<tempSetlistIds.length-1)) { [tempSetlistIds[i],tempSetlistIds[i+d]]=[tempSetlistIds[i+d],tempSetlistIds[i]]; renderSetUI(); } }
         function saveSetlist() { const name = document.getElementById('set-name').value; if(!name) { alert("Nama?"); return; } if(editingSetlistId) { setlists[setlists.findIndex(s=>s.id===editingSetlistId)] = { id: editingSetlistId, name, songIds: tempSetlistIds }; } else { setlists.push({ id: Date.now(), name, songIds: tempSetlistIds }); } saveToCloud(); closeSetlistEditor(); }
         function deleteSetlist() { if(confirm("Hapus?")) { setlists=setlists.filter(s=>s.id!==editingSetlistId); saveToCloud(); closeSetlistEditor(); } }
         function closeSetlistEditor() { document.getElementById('setlist-editor').classList.add('hidden'); document.getElementById('list-view').classList.remove('hidden'); renderSetlists(); }
@@ -335,23 +331,48 @@
 
         function openEditor(songId = null) {
             document.getElementById('list-view').classList.add('hidden'); document.getElementById('detail-view').classList.add('hidden'); document.getElementById('editor-view').classList.remove('hidden'); window.scrollTo(0,0);
-            if (songId) { currentSong = songs.find(s => s.id === songId); document.getElementById('song-id').value = currentSong.id; document.getElementById('title').value = currentSong.title; document.getElementById('artist').value = currentSong.artist||""; document.getElementById('key').value = currentSong.key; document.getElementById('bpm').value = currentSong.bpm||""; document.getElementById('tempo').value = currentSong.tempoVal; editState.sections = JSON.parse(JSON.stringify(currentSong.sections)); } 
-            else { document.getElementById('song-id').value = ''; document.getElementById('title').value = ''; document.getElementById('artist').value = ''; document.getElementById('key').value = ''; document.getElementById('bpm').value = ''; document.getElementById('tempo').value = '4'; editState.sections = []; }
+            if (songId) { 
+                currentSong = songs.find(s => s.id === songId); 
+                document.getElementById('song-id').value = currentSong.id; document.getElementById('title').value = currentSong.title; document.getElementById('artist').value = currentSong.artist||""; document.getElementById('key').value = currentSong.key; document.getElementById('bpm').value = currentSong.bpm||""; 
+                // V19.3 Fix: Tempo & Null Bars
+                let safeTempo = currentSong.tempoVal || 4; document.getElementById('tempo').value = safeTempo; 
+                let loadedSections = JSON.parse(JSON.stringify(currentSong.sections));
+                editState.sections = loadedSections.map(sec => { if(!sec.bars) sec.bars = []; return sec; });
+            } else { 
+                document.getElementById('song-id').value = ''; document.getElementById('title').value = ''; document.getElementById('artist').value = ''; document.getElementById('key').value = ''; document.getElementById('bpm').value = ''; document.getElementById('tempo').value = '4'; editState.sections = []; 
+            }
             renderEditor();
         }
-        function addSection(type) { editState.sections.push({ type, note: "", bars: [] }); addBar(editState.sections.length-1); }
+
+        // V19.1 Add Section logic
+        function addSection(type, isBlank = false) { 
+            editState.sections.push({ type: type, note: "", bars: [] });
+            if (!isBlank) addBar(editState.sections.length - 1); 
+            else renderEditor();
+        }
+        
         function removeSection(idx) { if(confirm("Hapus?")) { editState.sections.splice(idx,1); renderEditor(); } }
+        function updateSectionType(i,v) { editState.sections[i].type = v; }
         function updateSectionNote(i,v) { editState.sections[i].note = v; }
-        function addBar(i) { const t=parseInt(document.getElementById('tempo').value); editState.sections[i].bars.push({melody:Array(t).fill(""), beats:Array(t).fill(""), repStart:false, repEnd:false}); renderEditor(); }
+        
+        function addBar(i) { 
+            let t = parseInt(document.getElementById('tempo').value); if (isNaN(t) || t < 1) { t = 4; document.getElementById('tempo').value = '4'; }
+            if (!editState.sections[i].bars) editState.sections[i].bars = [];
+            editState.sections[i].bars.push({melody:Array(t).fill(""), beats:Array(t).fill(""), repStart:false, repEnd:false}); renderEditor(); 
+        }
         function removeBar(s,b) { editState.sections[s].bars.splice(b,1); renderEditor(); }
         function updateData(s,b,t,i,v) { editState.sections[s].bars[b][t][i] = v; }
         function moveBar(s,b,d) { const bars=editState.sections[s].bars; if((d===-1&&b>0)||(d===1&&b<bars.length-1)) { [bars[b],bars[b+d]]=[bars[b+d],bars[b]]; renderEditor(); } }
         function toggleRepeat(s,b,t) { if(t==='start') editState.sections[s].bars[b].repStart=!editState.sections[s].bars[b].repStart; if(t==='end') editState.sections[s].bars[b].repEnd=!editState.sections[s].bars[b].repEnd; renderEditor(); }
+        
         function renderEditor() {
-            const c = document.getElementById('editor-sections'); const t = parseInt(document.getElementById('tempo').value); c.innerHTML = '';
+            const c = document.getElementById('editor-sections'); 
+            let t = parseInt(document.getElementById('tempo').value); if (isNaN(t) || t < 1) t = 4;
+            c.innerHTML = '';
             editState.sections.forEach((sec, sIdx) => {
-                let h = `<div class="section-block"><div class="section-header"><span>${sec.type}</span><input type="text" class="section-note-input" placeholder="Note..." value="${sec.note||''}" oninput="updateSectionNote(${sIdx}, this.value)"><span onclick="removeSection(${sIdx})" style="color:#b71c1c;cursor:pointer;font-size:1.2em;">✖</span></div>`;
-                sec.bars.forEach((bar, bIdx) => {
+                let h = `<div class="section-block"><div class="section-header"><input type="text" class="section-type-input" value="${sec.type}" oninput="updateSectionType(${sIdx}, this.value)"><input type="text" class="section-note-input" placeholder="..." value="${sec.note||''}" oninput="updateSectionNote(${sIdx}, this.value)"><span onclick="removeSection(${sIdx})" style="color:#b71c1c;cursor:pointer;font-size:1.2em; margin-left:auto;">✖</span></div>`;
+                const bars = sec.bars || [];
+                bars.forEach((bar, bIdx) => {
                     let beats=[...(bar.beats||[])], mels=[...(bar.melody||[])]; while(beats.length<t)beats.push(""); while(mels.length<t)mels.push(""); beats=beats.slice(0,t); mels=mels.slice(0,t);
                     const as=bar.repStart?'active':'', ae=bar.repEnd?'active':'';
                     h += `<div class="bar-wrapper"><div class="grid-row" style="grid-template-columns:repeat(${t},1fr)">`;
@@ -363,55 +384,30 @@
         }
         function saveSong() {
             const id=document.getElementById('song-id').value; const title=document.getElementById('title').value; if(!title){alert("Judul?");return;}
-            const data={ id:id?parseInt(id):Date.now(), title, artist:document.getElementById('artist').value, key:document.getElementById('key').value, bpm:document.getElementById('bpm').value, tempoVal:parseInt(document.getElementById('tempo').value), sections:editState.sections };
+            let tVal = parseInt(document.getElementById('tempo').value); if (isNaN(tVal) || tVal < 1) tVal = 4;
+            const data={ id:id?parseInt(id):Date.now(), title, artist:document.getElementById('artist').value, key:document.getElementById('key').value, bpm:document.getElementById('bpm').value, tempoVal:tVal, sections:editState.sections };
             if(id) songs[songs.findIndex(s=>s.id==id)]=data; else songs.push(data); saveToCloud(); goHome();
         }
         function deleteSong() { if(confirm("Hapus?")) { songs=songs.filter(s=>s.id!=document.getElementById('song-id').value); saveToCloud(); goHome(); } }
 
-        // --- SMART CHORD FORMATTER V16.3 (Fix Dempet & Spasi) ---
+        // --- SMART CHORD FORMATTER V19.4 ---
         function formatChordHtml(raw) {
-            if (!raw) return "";
-            if (raw === "•") return "•";
-
-            // 1. Fitur Anti-Dempet: Jika ada spasi, pecah jadi 2 chord
-            if (raw.includes(" ")) {
-                let chords = raw.split(" "); // Pisahkan "4(2)/6" dan "5(2)/7"
-                // Format satu per satu, lalu gabung dengan jarak (nbsp)
-                return chords.map(c => formatSingleChord(c)).join("&nbsp;&nbsp;"); 
-            } else {
-                return formatSingleChord(raw);
-            }
+            if (!raw) return ""; if (raw === "•") return "•";
+            if (raw.includes(" ")) { let chords = raw.split(" "); return chords.map(c => formatSingleChord(c)).join("&nbsp;&nbsp;"); } 
+            else { return formatSingleChord(raw); }
         }
-
-        // Fungsi pembantu memformat 1 chord
         function formatSingleChord(chord) {
-            let parts = chord.split('/');
-            let main = parts[0];
-            let bass = parts.length > 1 ? parts[1] : null;
-
-            // PERBAIKAN DISINI:
-            // [0-9]+ diganti jadi [1-7]
-            // Artinya: Hanya baca angka 1-7 sebagai induk.
-            // Jika ada angka lain di belakangnya (misal 2 di "42"), itu dianggap ekor/variasi.
+            let parts = chord.split('/'); let main = parts[0]; let bass = parts.length > 1 ? parts[1] : null;
+            // FIX REGEX: ONLY 1-7 (OR A-G) AS ROOT
             let match = main.match(/^([b#]?[1-7]|[A-G][b#]?)(.*)$/);
-            
             if (match) {
-                let root = match[1];    // Sekarang "42" akan terpisah: Root="4"
-                let quality = match[2]; // Quality="2" (Ini yg akan naik ke atas)
-
-                // Format Quality: Angka, Kurung, #, b naik ke atas (Superscript)
-                // Huruf 'm', 'M', 'sus' biarkan normal (sejajar)
+                let root = match[1]; let quality = match[2]; 
                 let formattedQuality = quality.replace(/([0-9()#b]+)/g, '<span class="chord-sup">$1</span>');
-                
                 let html = `${root}${formattedQuality}`;
-                
-                // Tambahkan Bass jika ada
-                if (bass) {
-                    html += `<span class="chord-slash">/</span><span class="chord-bass">${bass}</span>`;
-                }
+                if (bass) { html += `<span class="chord-slash">/</span><span class="chord-bass">${bass}</span>`; }
                 return html;
             }
-            return chord; // Kembalikan apa adanya jika tidak sesuai pola
+            return chord; 
         }
 
         function showDetail(id, isGigMode=false) {
@@ -422,21 +418,21 @@
             const content=document.getElementById('view-content'); content.innerHTML='';
             currentSong.sections.forEach(sec => {
                 const wrap=document.createElement('div'); wrap.className='view-section-wrapper';
+                const bars = sec.bars || [];
+                if(bars.length === 0) wrap.classList.add('blank-section');
                 const nh=sec.note?`<span class="view-section-note">${sec.note}</span>`:''; wrap.innerHTML=`<div class="view-section-title sec-${sec.type}"><span>${sec.type}</span>${nh}</div>`;
-                const grid=document.createElement('div'); grid.className='view-bars-container';
-                sec.bars.forEach(bar => {
-                    const bd=document.createElement('div'); bd.className='view-bar'; if(bar.repStart)bd.classList.add('rep-start'); if(bar.repEnd)bd.classList.add('rep-end');
-                    bd.style.gridTemplateColumns=`repeat(${currentSong.tempoVal},1fr)`;
-                    let beats=[...(bar.beats||[])], mels=[...(bar.melody||[])]; while(beats.length<currentSong.tempoVal)beats.push(""); while(mels.length<currentSong.tempoVal)mels.push("");
-                    for(let i=0;i<currentSong.tempoVal;i++){ 
-                        let raw=beats[i];
-                        let d = (raw && raw.trim()) ? formatChordHtml(raw) : "<span class='empty-dot'>•</span>";
-                        
-                        bd.innerHTML+=`<div class="view-beat-box"><div class="view-melody">${mels[i]}</div><div class="view-chord">${d}</div></div>`; 
-                    }
-                    grid.appendChild(bd);
-                });
-                wrap.appendChild(grid); content.appendChild(wrap);
+                if(bars.length > 0) {
+                    const grid=document.createElement('div'); grid.className='view-bars-container';
+                    bars.forEach(bar => {
+                        const bd=document.createElement('div'); bd.className='view-bar'; if(bar.repStart)bd.classList.add('rep-start'); if(bar.repEnd)bd.classList.add('rep-end');
+                        bd.style.gridTemplateColumns=`repeat(${currentSong.tempoVal},1fr)`;
+                        let beats=[...(bar.beats||[])], mels=[...(bar.melody||[])]; while(beats.length<currentSong.tempoVal)beats.push(""); while(mels.length<currentSong.tempoVal)mels.push("");
+                        for(let i=0;i<currentSong.tempoVal;i++){ let raw=beats[i]; let d=(raw&&raw.trim())?formatChordHtml(raw):"<span class='empty-dot'>•</span>"; bd.innerHTML+=`<div class="view-beat-box"><div class="view-melody">${mels[i]}</div><div class="view-chord">${d}</div></div>`; }
+                        grid.appendChild(bd);
+                    });
+                    wrap.appendChild(grid);
+                }
+                content.appendChild(wrap);
             });
         }
         function updateZoom(v) { document.documentElement.style.setProperty('--font-chord', v+"px"); }
