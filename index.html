@@ -5,21 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <title>Chord Master V19.4</title>
+    <title>Chord Master V21.3</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700;900&display=swap" rel="stylesheet">
 
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 
     <style>
+        /* BASE STYLES */
         :root {
             --bg-color: #ffffff; --card-bg: #f8f9fa; --text-main: #000000; --text-sec: #555555;
             --accent: #2962ff; --accent-sec: #00c853; --border: #ddd;
             --col-verse: #000; --col-chorus: #d50000; --col-bridge: #ff6d00; --col-intro: #6200ea; 
-            --font-chord: 22px; --font-stack: 'Roboto Condensed', sans-serif;
+            --font-chord: 22px;
+            --font-stack: 'Roboto Condensed', 'Avenir Next Condensed', 'Arial Narrow', sans-serif;
         }
         body { font-family: var(--font-stack); background: var(--bg-color); color: var(--text-main); margin: 0; padding: 10px; padding-bottom: 180px; }
         .hidden { display: none !important; }
@@ -52,6 +54,11 @@
         .song-checkbox-item input { width: 25px; height: 25px; margin-right: 15px; }
 
         .section-block { background: #fff; border: 1px solid #ccc; margin-bottom: 20px; border-radius: 8px; }
+        
+        /* MEDLEY EDITOR */
+        .medley-block { background: #fff3e0; border: 2px dashed #ff9800; } 
+        .medley-header-edit { display: flex; gap: 5px; padding: 10px; flex-wrap: wrap; align-items: center; background: #ffe0b2; border-bottom: 1px solid #ffcc80; }
+
         .section-header { background: #f0f0f0; padding: 10px; font-weight: bold; display: flex; justify-content: flex-start; align-items: center; gap: 10px; border-bottom: 1px solid #ddd; }
         .section-type-input { background: transparent; border: none; border-bottom: 1px solid #000; color: #000; font-weight: 800; font-size: 1em; width: 120px; padding: 2px; margin: 0; }
         .section-note-input { background: transparent; border: none; border-bottom: 1px dashed #999; color: var(--accent); font-size: 0.9em; padding: 2px; width: 100px; margin: 0; flex: 1; }
@@ -61,6 +68,31 @@
         .beat-input { text-align: center; font-weight: bold; font-size: 1.2em; padding: 8px 0; border: 1px solid #ccc; border-radius: 4px; }
         .melody-input { text-align: center; border: none; border-bottom: 1px dashed #ccc; color: var(--accent-sec); font-weight: bold; font-size: 0.9em; }
         .bar-tools { display: flex; justify-content: space-between; margin-top: 8px; background: #f9f9f9; padding: 5px; border-radius: 6px; }
+
+        /* VIEW MODE: MEDLEY BANNER (PROPORTION FIX) */
+        .view-medley-banner {
+            background: #000; color: #fff;
+            padding: 15px; border-radius: 8px;
+            margin: 30px 0 20px 0; 
+            display: flex; flex-direction: column;
+            align-items: center; text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .view-medley-title { 
+            font-size: 1.4em; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px;
+        }
+        /* FIX DISINI: Ukuran disamakan dengan Main Info (sekitar 1em) */
+        .view-medley-meta { 
+            font-size: 1em;  /* <--- KEMBALI KE UKURAN NORMAL */
+            font-weight: bold;
+            color: #eee; 
+            font-family: var(--font-stack);
+            display: flex; gap: 15px;
+            margin-top: 2px;
+        }
+        .view-medley-meta span { 
+            color: #ffd54f; /* Tetap Kuning agar kontras */
+        }
 
         .view-section-title { font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; border-bottom: 2px solid #000; padding-bottom: 2px; display: flex; justify-content: flex-start; align-items: baseline; gap: 10px; }
         .sec-Chorus .view-section-title { color: var(--col-chorus); border-color: var(--col-chorus); }
@@ -80,27 +112,10 @@
         .view-beat-box { background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 45px; padding: 0 2px;}
         .view-melody { color: var(--accent-sec); font-size: 0.8em; text-align: center; font-weight: bold; min-height: 12px; }
         
-        /* --- CHORD FORMATTING FIXED V19.4 --- */
-        .view-chord { 
-            color: #000; font-weight: 800; font-size: var(--font-chord); 
-            line-height: 1; white-space: nowrap; letter-spacing: -0.5px;
-        }
-        /* Pangkat (Superscript) */
-        .chord-sup {
-            font-size: 0.65em; vertical-align: super; 
-            font-weight: normal; /* Tipis (Sesuai request) */
-            margin-left: 1px; line-height: 0; 
-            color: #000; /* Hitam */
-        }
-        /* Bass Note (Tetap Besar) */
-        .chord-bass {
-            font-size: 1em; color: #000; font-weight: 800; 
-        }
-        /* Garis Miring (Rapat) */
-        .chord-slash {
-            font-size: 0.9em; color: #999; font-weight: 300; 
-            margin: 0; 
-        }
+        .view-chord { color: #000; font-weight: 800; font-size: var(--font-chord); line-height: 1; white-space: nowrap; letter-spacing: -0.5px; }
+        .chord-sup { font-size: 0.65em; vertical-align: super; font-weight: normal; margin-left: 1px; line-height: 0; color: #000; }
+        .chord-bass { font-size: 1em; color: #000; font-weight: 800; }
+        .chord-slash { font-size: 0.9em; color: #999; font-weight: 300; margin: 0; }
         .empty-dot { color: #ccc; font-weight: normal; font-size: 0.8em; }
         
         .zoom-panel { display: flex; align-items: center; gap: 10px; background: #fff; padding: 8px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #ccc; }
@@ -133,7 +148,7 @@
     </div>
 
     <div id="list-view">
-        <h2 style="margin: 10px 0 15px 0;">Chord Master V19.4</h2>
+        <h2 style="margin: 10px 0 15px 0;">Chord Master V21.3</h2>
         <div class="nav-tabs">
             <button class="tab-btn active" id="tab-songs" onclick="switchTab('songs')">Library</button>
             <button class="tab-btn" id="tab-sets" onclick="switchTab('sets')">Setlists</button>
@@ -199,6 +214,7 @@
                 <button class="btn btn-outline" onclick="addSection('Interlude')">Interlude</button>
                 <button class="btn btn-outline" onclick="addSection('Ending')">Ending</button>
                 <button class="btn btn-outline" style="border-style:dashed; color:#555;" onclick="addSection('Label', true)">+ Label/Blank</button>
+                <button class="btn btn-outline" style="border-color:#ff9800; color:#e65100; background:#fff3e0;" onclick="addSection('Medley')">⚠ Medley</button>
             </div>
         </div>
         <button class="btn btn-danger" onclick="deleteSong()" style="margin-top:30px; width:100%">Hapus Lagu</button>
@@ -207,7 +223,10 @@
     <div id="detail-view" class="hidden">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
             <button class="btn btn-secondary btn-sm" onclick="exitDetail()">&larr; Back</button>
-            <button class="btn btn-secondary btn-sm" onclick="editCurrent()">Edit</button>
+            <div style="display:flex; gap:10px;">
+                <button class="btn btn-secondary btn-sm" onclick="duplicateCurrent()">Copy</button>
+                <button class="btn btn-secondary btn-sm" onclick="editCurrent()">Edit</button>
+            </div>
         </div>
         <div style="text-align:center; margin-bottom:10px;">
             <h3 id="view-title" style="margin:0; font-size:1.8em;">Judul</h3>
@@ -334,7 +353,6 @@
             if (songId) { 
                 currentSong = songs.find(s => s.id === songId); 
                 document.getElementById('song-id').value = currentSong.id; document.getElementById('title').value = currentSong.title; document.getElementById('artist').value = currentSong.artist||""; document.getElementById('key').value = currentSong.key; document.getElementById('bpm').value = currentSong.bpm||""; 
-                // V19.3 Fix: Tempo & Null Bars
                 let safeTempo = currentSong.tempoVal || 4; document.getElementById('tempo').value = safeTempo; 
                 let loadedSections = JSON.parse(JSON.stringify(currentSong.sections));
                 editState.sections = loadedSections.map(sec => { if(!sec.bars) sec.bars = []; return sec; });
@@ -344,16 +362,21 @@
             renderEditor();
         }
 
-        // V19.1 Add Section logic
         function addSection(type, isBlank = false) { 
-            editState.sections.push({ type: type, note: "", bars: [] });
-            if (!isBlank) addBar(editState.sections.length - 1); 
-            else renderEditor();
+            if(type === 'Medley') {
+                editState.sections.push({ type: 'Medley', note: "", bars: [], headerTitle: "", headerKey: "", headerBpm: "" });
+                renderEditor();
+            } else {
+                editState.sections.push({ type: type, note: "", bars: [] });
+                if (!isBlank) addBar(editState.sections.length - 1); 
+                else renderEditor();
+            }
         }
         
         function removeSection(idx) { if(confirm("Hapus?")) { editState.sections.splice(idx,1); renderEditor(); } }
         function updateSectionType(i,v) { editState.sections[i].type = v; }
         function updateSectionNote(i,v) { editState.sections[i].note = v; }
+        function updateMedley(i, field, v) { editState.sections[i][field] = v; }
         
         function addBar(i) { 
             let t = parseInt(document.getElementById('tempo').value); if (isNaN(t) || t < 1) { t = 4; document.getElementById('tempo').value = '4'; }
@@ -370,16 +393,22 @@
             let t = parseInt(document.getElementById('tempo').value); if (isNaN(t) || t < 1) t = 4;
             c.innerHTML = '';
             editState.sections.forEach((sec, sIdx) => {
-                let h = `<div class="section-block"><div class="section-header"><input type="text" class="section-type-input" value="${sec.type}" oninput="updateSectionType(${sIdx}, this.value)"><input type="text" class="section-note-input" placeholder="..." value="${sec.note||''}" oninput="updateSectionNote(${sIdx}, this.value)"><span onclick="removeSection(${sIdx})" style="color:#b71c1c;cursor:pointer;font-size:1.2em; margin-left:auto;">✖</span></div>`;
-                const bars = sec.bars || [];
-                bars.forEach((bar, bIdx) => {
-                    let beats=[...(bar.beats||[])], mels=[...(bar.melody||[])]; while(beats.length<t)beats.push(""); while(mels.length<t)mels.push(""); beats=beats.slice(0,t); mels=mels.slice(0,t);
-                    const as=bar.repStart?'active':'', ae=bar.repEnd?'active':'';
-                    h += `<div class="bar-wrapper"><div class="grid-row" style="grid-template-columns:repeat(${t},1fr)">`;
-                    for(let i=0;i<t;i++) h+=`<div class="beat-container"><input class="melody-input" value="${mels[i]}" oninput="updateData(${sIdx},${bIdx},'melody',${i},this.value)" placeholder="."><input class="beat-input" value="${beats[i]}" oninput="updateData(${sIdx},${bIdx},'beats',${i},this.value)"></div>`;
-                    h += `</div><div class="bar-tools"><div style="display:flex;gap:5px;"><button class="tool-btn ${as}" onclick="toggleRepeat(${sIdx},${bIdx},'start')">||:</button><button class="tool-btn ${ae}" onclick="toggleRepeat(${sIdx},${bIdx},'end')">:||</button></div><div style="display:flex;gap:5px;"><button class="tool-btn" onclick="moveBar(${sIdx},${bIdx},-1)">↑</button><button class="tool-btn" onclick="moveBar(${sIdx},${bIdx},1)">↓</button><button class="tool-btn" style="color:#b71c1c;" onclick="removeBar(${sIdx},${bIdx})">✖</button></div></div></div>`;
-                });
-                h+=`<button class="btn btn-secondary btn-sm" style="width:100%" onclick="addBar(${sIdx})">+ Bar</button></div>`; c.innerHTML+=h;
+                let h = '';
+                if(sec.type === 'Medley') {
+                    h = `<div class="section-block medley-block"><div class="medley-header-edit"><b style="color:#e65100;margin-right:5px;">MEDLEY:</b><input type="text" placeholder="Lagu..." value="${sec.headerTitle||''}" oninput="updateMedley(${sIdx},'headerTitle',this.value)" style="flex:2;margin:0"><input type="text" placeholder="Key" value="${sec.headerKey||''}" oninput="updateMedley(${sIdx},'headerKey',this.value)" style="width:50px;margin:0"><input type="text" placeholder="BPM" value="${sec.headerBpm||''}" oninput="updateMedley(${sIdx},'headerBpm',this.value)" style="width:50px;margin:0"><span onclick="removeSection(${sIdx})" style="color:#b71c1c;cursor:pointer;font-size:1.2em;margin-left:5px;">✖</span></div></div>`;
+                } else {
+                    h = `<div class="section-block"><div class="section-header"><input type="text" class="section-type-input" value="${sec.type}" oninput="updateSectionType(${sIdx}, this.value)"><input type="text" class="section-note-input" placeholder="..." value="${sec.note||''}" oninput="updateSectionNote(${sIdx}, this.value)"><span onclick="removeSection(${sIdx})" style="color:#b71c1c;cursor:pointer;font-size:1.2em; margin-left:auto;">✖</span></div>`;
+                    const bars = sec.bars || [];
+                    bars.forEach((bar, bIdx) => {
+                        let beats=[...(bar.beats||[])], mels=[...(bar.melody||[])]; while(beats.length<t)beats.push(""); while(mels.length<t)mels.push(""); beats=beats.slice(0,t); mels=mels.slice(0,t);
+                        const as=bar.repStart?'active':'', ae=bar.repEnd?'active':'';
+                        h += `<div class="bar-wrapper"><div class="grid-row" style="grid-template-columns:repeat(${t},1fr)">`;
+                        for(let i=0;i<t;i++) h+=`<div class="beat-container"><input class="melody-input" value="${mels[i]}" oninput="updateData(${sIdx},${bIdx},'melody',${i},this.value)" placeholder="."><input class="beat-input" value="${beats[i]}" oninput="updateData(${sIdx},${bIdx},'beats',${i},this.value)"></div>`;
+                        h += `</div><div class="bar-tools"><div style="display:flex;gap:5px;"><button class="tool-btn ${as}" onclick="toggleRepeat(${sIdx},${bIdx},'start')">||:</button><button class="tool-btn ${ae}" onclick="toggleRepeat(${sIdx},${bIdx},'end')">:||</button></div><div style="display:flex;gap:5px;"><button class="tool-btn" onclick="moveBar(${sIdx},${bIdx},-1)">↑</button><button class="tool-btn" onclick="moveBar(${sIdx},${bIdx},1)">↓</button><button class="tool-btn" style="color:#b71c1c;" onclick="removeBar(${sIdx},${bIdx})">✖</button></div></div></div>`;
+                    });
+                    h+=`<button class="btn btn-secondary btn-sm" style="width:100%" onclick="addBar(${sIdx})">+ Bar</button></div>`;
+                }
+                c.innerHTML+=h;
             });
         }
         function saveSong() {
@@ -389,8 +418,8 @@
             if(id) songs[songs.findIndex(s=>s.id==id)]=data; else songs.push(data); saveToCloud(); goHome();
         }
         function deleteSong() { if(confirm("Hapus?")) { songs=songs.filter(s=>s.id!=document.getElementById('song-id').value); saveToCloud(); goHome(); } }
+        function duplicateCurrent() { if(!confirm("Copy?"))return; let old=songs.find(s=>s.id===currentSong.id); if(!old)return; let n=JSON.parse(JSON.stringify(old)); n.id=Date.now(); n.title+=" (1)"; songs.push(n); saveToCloud(); openEditor(n.id); }
 
-        // --- SMART CHORD FORMATTER V19.4 ---
         function formatChordHtml(raw) {
             if (!raw) return ""; if (raw === "•") return "•";
             if (raw.includes(" ")) { let chords = raw.split(" "); return chords.map(c => formatSingleChord(c)).join("&nbsp;&nbsp;"); } 
@@ -398,7 +427,6 @@
         }
         function formatSingleChord(chord) {
             let parts = chord.split('/'); let main = parts[0]; let bass = parts.length > 1 ? parts[1] : null;
-            // FIX REGEX: ONLY 1-7 (OR A-G) AS ROOT
             let match = main.match(/^([b#]?[1-7]|[A-G][b#]?)(.*)$/);
             if (match) {
                 let root = match[1]; let quality = match[2]; 
@@ -417,22 +445,26 @@
             document.getElementById('view-title').innerText=currentSong.title; document.getElementById('view-artist').innerText=currentSong.artist; document.getElementById('view-key').innerText=currentSong.key; document.getElementById('view-bpm').innerText=currentSong.bpm||"-"; document.getElementById('view-tempo').innerText=currentSong.tempoVal+"/4";
             const content=document.getElementById('view-content'); content.innerHTML='';
             currentSong.sections.forEach(sec => {
-                const wrap=document.createElement('div'); wrap.className='view-section-wrapper';
-                const bars = sec.bars || [];
-                if(bars.length === 0) wrap.classList.add('blank-section');
-                const nh=sec.note?`<span class="view-section-note">${sec.note}</span>`:''; wrap.innerHTML=`<div class="view-section-title sec-${sec.type}"><span>${sec.type}</span>${nh}</div>`;
-                if(bars.length > 0) {
-                    const grid=document.createElement('div'); grid.className='view-bars-container';
-                    bars.forEach(bar => {
-                        const bd=document.createElement('div'); bd.className='view-bar'; if(bar.repStart)bd.classList.add('rep-start'); if(bar.repEnd)bd.classList.add('rep-end');
-                        bd.style.gridTemplateColumns=`repeat(${currentSong.tempoVal},1fr)`;
-                        let beats=[...(bar.beats||[])], mels=[...(bar.melody||[])]; while(beats.length<currentSong.tempoVal)beats.push(""); while(mels.length<currentSong.tempoVal)mels.push("");
-                        for(let i=0;i<currentSong.tempoVal;i++){ let raw=beats[i]; let d=(raw&&raw.trim())?formatChordHtml(raw):"<span class='empty-dot'>•</span>"; bd.innerHTML+=`<div class="view-beat-box"><div class="view-melody">${mels[i]}</div><div class="view-chord">${d}</div></div>`; }
-                        grid.appendChild(bd);
-                    });
-                    wrap.appendChild(grid);
+                if(sec.type === 'Medley') {
+                    content.innerHTML += `<div class="view-medley-banner"><div class="view-medley-title">${sec.headerTitle || "MEDLEY / CHANGE"}</div><div class="view-medley-meta">${sec.headerKey ? `<span>KEY: ${sec.headerKey}</span>` : ''}${sec.headerBpm ? `<span>BPM: ${sec.headerBpm}</span>` : ''}</div></div>`;
+                } else {
+                    const wrap=document.createElement('div'); wrap.className='view-section-wrapper';
+                    const bars = sec.bars || [];
+                    if(bars.length === 0) wrap.classList.add('blank-section');
+                    const nh=sec.note?`<span class="view-section-note">${sec.note}</span>`:''; wrap.innerHTML=`<div class="view-section-title sec-${sec.type}"><span>${sec.type}</span>${nh}</div>`;
+                    if(bars.length > 0) {
+                        const grid=document.createElement('div'); grid.className='view-bars-container';
+                        bars.forEach(bar => {
+                            const bd=document.createElement('div'); bd.className='view-bar'; if(bar.repStart)bd.classList.add('rep-start'); if(bar.repEnd)bd.classList.add('rep-end');
+                            bd.style.gridTemplateColumns=`repeat(${currentSong.tempoVal},1fr)`;
+                            let beats=[...(bar.beats||[])], mels=[...(bar.melody||[])]; while(beats.length<currentSong.tempoVal)beats.push(""); while(mels.length<currentSong.tempoVal)mels.push("");
+                            for(let i=0;i<currentSong.tempoVal;i++){ let raw=beats[i]; let d=(raw&&raw.trim())?formatChordHtml(raw):"<span class='empty-dot'>•</span>"; bd.innerHTML+=`<div class="view-beat-box"><div class="view-melody">${mels[i]}</div><div class="view-chord">${d}</div></div>`; }
+                            grid.appendChild(bd);
+                        });
+                        wrap.appendChild(grid);
+                    }
+                    content.appendChild(wrap);
                 }
-                content.appendChild(wrap);
             });
         }
         function updateZoom(v) { document.documentElement.style.setProperty('--font-chord', v+"px"); }
